@@ -30,7 +30,7 @@ const Kazahstan = new FudbalskiTim("Kazahstan")
 const timovi = [];
 timovi.push(Francuska, Ukrajna, Finska, BiH, Kazahstan)
 
-// ligra
+// liga
 for (let i = 0; i < timovi.length; i++) {
     const domaciTim = timovi[i];
     for (let j = 0; j < timovi.length; j++) {
@@ -40,30 +40,24 @@ for (let i = 0; i < timovi.length; i++) {
             const brojGolovaDomacegTima = Math.trunc(Math.random() * 5);
             const brojGolovaGostujucegTima = Math.trunc(Math.random() * 5);
             if (brojGolovaDomacegTima > brojGolovaGostujucegTima) {
-                domaciTim.brojBodovaTimova += 3
             domaciTim.brojPostignutihGolova += brojGolovaDomacegTima
             domaciTim.brojPobjeda += 1
-            gostujuciTim.brojBodovaTimova += 0
             gostujuciTim.brojPrimjljenihGolova += brojGolovaGostujucegTima
             gostujuciTim.brojPoraza += 1
             console.log(`${domaciTim.ime}  ${brojGolovaDomacegTima}:${brojGolovaGostujucegTima}  ${gostujuciTim.ime}`)
         }
         else if (brojGolovaDomacegTima == brojGolovaGostujucegTima) {
-            domaciTim.brojBodovaTimova += 1
             domaciTim.brojPostignutihGolova += brojGolovaDomacegTima
             domaciTim.brojNerjesenih +=1
             gostujuciTim.brojNerjesenih +=1
-            gostujuciTim.brojBodovaTimova += 1
             gostujuciTim.brojPrimjljenihGolova += brojGolovaGostujucegTima
             console.log(`${domaciTim.ime}  ${brojGolovaDomacegTima}:${brojGolovaGostujucegTima}  ${gostujuciTim.ime}`)
             
         }
         else {
-            domaciTim.brojBodovaTimova += 0
             domaciTim.brojPostignutihGolova += brojGolovaDomacegTima
             domaciTim.brojPoraza += 1
             gostujuciTim.brojPobjeda += 1
-            gostujuciTim.brojBodovaTimova += 3
             gostujuciTim.brojPrimjljenihGolova += brojGolovaGostujucegTima
             console.log(`${domaciTim.ime}  ${brojGolovaDomacegTima}:${brojGolovaGostujucegTima}  ${gostujuciTim.ime}`)
             
