@@ -1,9 +1,15 @@
+// napraviti find account
+// transakcije za sve u banci i u atmu
+// skontat da se automatski pusha u glavni array bp
+// zavrsiti wid,dep i check i u banci i u atmu
+//testirati close acc close atm
+
 // array with all banks, all atms and all people
 const DB = []
 const BANKS = []
 const ATMS = []
 const PEOPLE = []
-
+DB.push(BANKS, ATMS, PEOPLE)
 
 const generateBirthDate = () => {
     //check for leapYear
@@ -54,8 +60,8 @@ const generateBirthDate = () => {
     dateOfBirth = day + '.' + month + '.' + year;
 
     return dateOfBirth;
-} 
-const generateJMBG = (date) => {
+}
+const generateJMBG = (date, gender, birthPlace) => {
     /*  JMBG je individualna i neponovljiva oznaka identifikacionih podataka o licu i sastoji se od 13 cifara svrstanih u 6 grupa, i to:
         I grupa dan rođenja (dvije cifre)
         II grupa mjesec rođenja (dvije cifre)
@@ -80,15 +86,27 @@ const generateJMBG = (date) => {
     JMBG += yearOfBirth;
 
     //IV group of JMBG
-    JMBG += Math.floor(Math.random() * (19 - 14 + 1)) + 14;
+    if (birthPlace == "Tuzla") {
+        JMBG += 18
+    }
+    else {
+        JMBG += Math.trunc(Math.random() * (19 - 14 + 1)) + 14;
+    }
 
     //V group of JMBG
-    JMBG += Math.floor(Math.random()*899 + 100)
+    if (gender == "M") {
+
+        JMBG += Math.trunc(Math.random() * 499)
+    }
+    else if (gender = "F") {
+        JMBG += Math.trunc(Math.random() * 999 + 500)
+
+    }
 
     //VI group of JMBG
-    JMBG += Math.floor(Math.random() * 9 + 1);
+    JMBG += Math.floor(Math.random() * 9);
 
-   
+
     return JMBG;
 }
 
@@ -98,14 +116,19 @@ class Person {
     lastName;
     jmbg;
     birthDate;
-    hasAccInBank;  
-    constructor(firstName, lastName) {
+    hasAccInBank;
+    gender;
+    birthPlace;
+    cards = []
+    constructor(firstName, lastName, gender, birthPlace) {
         this.firstName = firstName,
             this.lastName = lastName,
-            // this.jmbg = 1234,   // this is unique jmbg for all persons, for only testing purpose. In reality jmbg is randomly generate
             this.birthDate = generateBirthDate(),
-            this.jmbg  = generateJMBG(this.birthDate), 
-            this.hasAccInBank = false
+            this.jmbg = generateJMBG(this.birthDate, this.gender, this.birthPlace),
+            this.gender = gender
+        this.birthPlace = birthPlace
+        // this.jmbg = 1234,   // this is unique jmbg for all persons, for only testing purpose. In reality jmbg is randomly generate
+        this.hasAccInBank = false
 
     }
 
@@ -115,35 +138,45 @@ class Person {
 
 
 class Atm {
+    static atmID = 1;
     bankName;
     bank_ID;
+    balance = 0;
     atmLocation;
-    isWorking;      
+    isWorking;
     constructor(atmLocation) {
-      
-            this.atmLocation = atmLocation
+        this.atm_ID = Atm.atmID++;
+        this.atmLocation = atmLocation
         this.isWorking = false
     }
-    depositMoney(person, pin, amount) {
+    depositMoney(person, cardID, pin, amount) {
         if (this.isWorking) {
-            if (person.pin == pin && person.card.bank_ID == this.bank_ID) {
-                for (let i = 0; i < BANKS.length; i++) {
-                    const bank = BANKS[i];
-                    if (bank.bankName == person.card.bankName) {
-                        bank.bankAccounts.forEach(account => {
-                            if (account.bankAccount_ID == person.card.bankAccount_ID) {
-                                account.balance += amount
+            person.cards.forEach(card => {
+                if (card.card_ID = cardID) {
+                    const bankID = card.bank_ID
+                    if (person.pin == pin && bankID == this.bank_ID) {
+                        for (let i = 0; i < BANKS.length; i++) {
+                            const bank = BANKS[i];
+                            if (bank.bankName == card.bankName) {
+                                bank.bankAccounts.forEach(account => {
+                                    if (account.bankAccount_ID == card.bankAccount_ID) {
+                                        account.balance += amount
+                                        bank.bankBudget += amount
+                                    }
+                                });
                             }
-                        });
+                        }
                     }
+                    else console.log(`${person.firstName} ${person.lastName} your information is not valid.`)
                 }
-            }
-            else console.log(`${person.firstName} ${person.lastName} your information is not valid.`)
+            });
         }
         else console.log("ATM is not working.")
     }
 
-    witdrawMoney(person, pin, bankName) { }
+    witdrawMoney(person, pin, bankName) {
+
+    }
     checkBalance(person, pin, bankName) { }
     OpenToBuissnesAtm(bank) {
         this.isWorking = true;
@@ -151,24 +184,17 @@ class Atm {
 }
 
 
-class User extends Person {             // object user only is created in purpose of having records of all users of bank
-    bankName;
-    constructor(firstName, lastName, jmbg, birthDate, bankName) {
-        super(firstName, lastName, jmbg, birthDate);
-        this.bankName = bankName;
-    }
-}
-
-
-class Account extends User {
+class Account extends Person {
+    static accountid = 1;
     #pin;               // pin code
     bankAccount_ID;     // account number
     balance;               // balance on account
     accountCreated; // time and date when is acc created
-    constructor(firstName, lastName, jmbg, birthDate, bankName) {
-        super(firstName, lastName, jmbg, birthDate, bankName);
-        this.balance = 0;
-        this.hasAccInBank = "Active Account"
+    constructor(firstName, lastName, gender, birthPlace) {
+        super(firstName, lastName, gender, birthPlace);
+        this.bankAccount_ID = Account.accountid++,
+            this.balance = 0;
+        this.hasAccInBank = true
         this.accountCreated = getDateAndTime()
     }
     setPin(pin) {       // for purpose of testing code will be added manualy, but it is supposed to be random four numbers with
@@ -193,6 +219,8 @@ const getDateAndTimeForDateTo = () => {         // generating date until card is
 class Bank {
 
     static bankID = 1;         // bank id
+    static employeeID = 1;
+    bank_ID;
     bankName;
     bankAccounts = []       // array with all accounts in bank
     bankTransactions = []      // array with all transaction in bank
@@ -201,8 +229,8 @@ class Bank {
     allUsers = []                   // all users in bank
     bankLocation;
     bankBudget;         // starting budget for banks
-    bankCards;          // array with all cards in bank
-    empleyees = []
+    bankCards = [];          // array with all cards in bank
+    employees = []
     constructor(bankName, bankLocation, bankBudget) {
         this.bank_ID = Bank.bankID++,
             this.bankName = bankName,
@@ -213,37 +241,58 @@ class Bank {
             this.atmTransactions = [],
             this.bankAccounts = [],
             this.bankCards = []
-            this.empleyees = [{name:"emplye" , employeeID: 1}]
+        this.employees = []
 
     }
-    getCreateAccount (person,cardType, employeeID){
-        this.empleyees.forEach(employee => {
-            
-            if (employee.employeeID == employeeID)
-            this.#CreateAccount(person,cardType)
+
+    hireEmployee(person) {
+        person.employee_ID = Bank.employeeID++
+        person.hasAccInBank = false
+        person.isEmployed = true
+        person.employeeBankID = this.bank_ID
+        person.employeeBankName = this.bankName
+        this.employees.push(person)
+    }
+    fireEmploye(person) {
+        this.employees.forEach(employee => {
+            if (person.employee_ID = employee.employee_ID)
+                this.employees.slice(this.employees.indexOf(employee), 1)
+        });
+        person.employee_ID = undefined;
+        person.hasAccInBank = false
+        person.isEmployed = false
+        person.employeeBankID = undefined
+        person.employeeBankName = undefined
+
+    }
+    getCreateAccount(person, cardType, employeeid) {
+        // console.log(this.employees);
+        this.employees.forEach(employee => {
+            if (employee.employee_ID == employeeid) {
+                console.log("employee")
+                this.#CreateAccount(person, cardType)
+            }
         });
     }
-    #CreateAccount(person, cardType) {   
-        // let user = new User(person.firstName, person.lastName, person.jmbg, person.birthDate, this.bankName) // creating user and pushing it in array in bank
-        let account = new Account(person.firstName, person.lastName, person.jmbg, person.birthDate, this.bankName) // creating acc and adding
-        account.bankAccount_ID = this.bankAccounts.length + 1    // account id, set pin code and bank id to account, and pushing it into array in bank
-        let card = new Card(this.bankName, person.firstName, person.lastName, account.bankAccount_ID, cardType) // creating card, adding bank ID
+    #CreateAccount(person, cardType) {
+
+        let account = new Account(person.firstName, person.lastName, person.gender, person.birthPlace) // creating acc and adding
+        let card = new Card(this.bankName, person.firstName, person.lastName, account.bankAccount_ID, cardType)
+        // creating card, adding bank ID
         card.bank_ID = this.bank_ID
         person.hasAccInBank = true;
-        person.card = card      // adding card to person
-        // user.hasAccInBank = true        //chancing users/persons status to having account in bank
+        person.cards.push(card)      // adding card to person
         account.setPin(1111) // it should be first pin generated with 4 random number but for purpose of testing is 1111
         person.pin = account.getPin()
-        // user.bankAccount_ID = account.bankAccount_ID
+        account.cards.push(card)
         account.bank_ID = this.bank_ID
-        // this.allUsers.push(user)
         this.bankAccounts.push(account)
         this.bankCards.push(card)
     }
     changePinCode(person, bankAccount_ID, newPinCode) { // method for changing pin code
         this.bankAccounts.forEach(account => {
             if (account.bankAccount_ID == bankAccount_ID && account.jmbg == person.jmbg &&
-                 newPinCode < 10000 && newPinCode > 999 && !isNaN(newPinCode)) {
+                newPinCode < 10000 && newPinCode > 999 && !isNaN(newPinCode)) {
                 account.setPin(newPinCode)
                 person.pin = account.getPin()
                 console.log(`Hello ${person.firstName} ${person.lastName}, you are succesfuly changed your pin code. 
@@ -253,17 +302,68 @@ class Bank {
         });
 
     }
-    closeAccount(user) { }
-    revokeCard(account_ID) {
+    closeAccount(account_ID, person) {
+        this.bankAccounts.forEach(account => {
+            if (account_ID = account.bankAccount_ID) {
+                this.bankAccounts.splice(this.bankAccounts.indexOf(account), 1)
+                person.hasAccInBank = false
+                person.pin = undefined
+                person.cards.forEach(card => {
+                    if (card.bank_ID == this.bank_ID) {
+
+                        person.cards.splice(person.cards.indexOf(card), 1)
+                    }
+
+                });
+            }
+
+
+        });
+    }
+    issueCard(bankAccount_ID, person, cardType) {
+        let card = new Card(this.bankName, person.firstName, person.lastName, bankAccount_ID, cardType)
+        card.bank_ID = this.bank_ID
+        person.cards.push(card)      // adding card to person
+        this.bankAccounts.forEach(account => {
+            if (account.bankAccount_ID == bankAccount_ID) {
+                account.cards.push(card)
+            }
+        });
+        this.bankCards.push(card)
+
+    }
+    revokeCard(cardID, person) {
+        this.bankCards.forEach(card => {
+            if (card.card_ID == cardID) {
+                this.bankCards.splice(this.bankCards.indexOf(card, 1))
+            }
+            person.pin = undefined
+        });
 
     }
     addAtm(atm) {
         atm.bankName = this.bankName
         atm.bank_ID = this.bank_ID
     }
-    #addMoneyToAtm() { }
-    #closeAtm(amount, bank) {
-        this.isWorking = false
+    addMoneyToAtm(atmID, amount) {
+        ATMS.forEach(atm => {
+            if (atm.atm_ID == atmID) {
+                atm.balance += amount
+                this.bankBudget -= amount
+            }
+
+        });
+    }
+    closeAtm(atmID) {
+        ATMS.forEach(atm => {
+            if (atm.atm_ID == atmID) {
+                this.bankBudget += atm.balance
+                atm.balance = 0
+                this.isWorking = false
+            }
+
+        });
+
     }
     depositMoney(user, accountID) { }
     witdrawMoney(user, accountID) { }
@@ -274,14 +374,18 @@ class Bank {
 
 
 class Card {
-    bankName;
+    static cardId = 1;
+    card_ID;
+    bank_ID;
     firstName;
     lastName;
+    bankName;
     bankAccount_ID;
     cardType;
     validFrom; // date when card is created
     validTo;     // date until card is valid
     constructor(bankName, firstName, lastName, bankAccount, cardType) {
+        this.card_ID = Card.cardId++
         this.bankName = bankName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -292,19 +396,32 @@ class Card {
     }
 
 }
-const bank1 = new Bank( "banka", "tuzla", 111)
-const bank2 = new Bank( "banka1", "tuzla", 111)
+const bank1 = new Bank("banka", "tuzla", 10000)
+const bank2 = new Bank("banka1", "tuzla", 111)
 BANKS.push(bank1)
-const adis = new Person("Adis", "Aljic")
-bank1.getCreateAccount(adis, "Maestro",1)
+const adis = new Person("Adis", "Aljic", "M", "Tuzla")
+const radnik = new Person("radnik", "prezime", "F", "Tuzla")
+const radnik1 = new Person("radnik", "prezime", "F", "Tuzla")
+bank1.hireEmployee(radnik)
+bank1.getCreateAccount(adis, "Maestro", 1)
 // bank1.changePinCode(adis, 1, 7759)
-const atm1 = new Atm("tyzla")
+const atm1 = new Atm("Tuzla")
+ATMS.push(atm1)
+
+PEOPLE.push(adis,radnik,radnik1)
 atm1.OpenToBuissnesAtm()
 bank1.addAtm(atm1)
+bank1.addMoneyToAtm(1,1000)
 adis.insertCardInAtm()
 // console.log(adis.pin)
-atm1.depositMoney(adis, 1111, 100)
-
+// bank1.issueCard(1, adis, "visa")
+atm1.depositMoney(adis,1, 1111, 100)
+// console.log(bank1.bankAccounts)
+// 
+// const emp = new Employee(radnik)
 // console.log(adis)
-
-console.log(bank1)
+// bank1.hireEmployee(radnik1)
+console.log(bank1.bankAccounts)
+console.log(adis)
+console.log(atm1)
+// console.log(ATMS)
