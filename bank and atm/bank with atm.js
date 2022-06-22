@@ -5,29 +5,6 @@ const ATMS = []
 const PEOPLE = []
 
 
-// function for generating jmbg and birth date for persons
-// const generateBirthDate = () => {
-//     const leapYears = [1940, 1944, 1948, 1952, 1956, 1960, 1964, 1968, 1972, 1976, 1980, 1984, 1988, 1992, 1996, 2000, 2004]
-//     let year = Math.trunc(Math.random() * 65 + 1939)       // aprox alive and eligible people for bank acc
-//     let month = Math.trunc(Math.random() * 11 + 1)
-//     let day = 0;
-//     if (month == 2) {
-//         for (let i = 0; i < leapYears.length; i++) {
-//             const leapYear = leapYears[i];
-//             if (leapYear == year) {
-//                 day = Math.trunc(Math.random() * 28 + 1)
-//             }
-//             else day = Math.trunc(Math.random() * 27 + 1)
-//         }
-//     }
-//     else if (month == 4 || 6 || 9 || 11) day = Math.trunc(Math.random() * 29 + 1)
-//     else day = Math.trunc(Math.random() * 23 + 1)
-//     if (day < 10) { day = "0" + day }
-//     if (month < 10) { month = "0" + month }
-//     return "" + day + "." + month + "." + year
-
-// }
-
 const generateBirthDate = () => {
     //check for leapYear
     function isLeapYear(year) {
