@@ -7,25 +7,74 @@ Za pobjedu tim dobija 3 boda, za poraz dobija 0 bodova i za nerjesenu dobija 1 p
 Testirati funkciju sa najmanje 5 klubova.
 */
 
-const kreirajFudbalskiTim = (ime, brojPobjeda, brojPoraza, brojNerjesenih, brojPostignutihGolova, brojPrimjljenihGolova) => {
-    return {
-        ime,
-        brojPobjeda,
-        brojPoraza,
-        brojNerjesenih,
-        brojPostignutihGolova,
-        brojPrimjljenihGolova,
-        golRazlika: 0,
-        brojBodova: 0
+
+class FudbalskiTim {
+    ime;
+    brojPobjeda = 0;
+    brojPoraza = 0;
+    brojNerjesenih = 0;
+    brojPostignutihGolova = 0;
+    brojPrimjljenihGolova = 0;
+    brojBodovaTimova = 0
+    constructor(ime) {
+        this.ime = ime;
     }
+
 }
-const Francuska = kreirajFudbalskiTim("Francuska", 5, 0, 3, 18, 3)
-const Ukrajna = kreirajFudbalskiTim("Ukrajna", 2, 0, 6, 11, 8)
-const Finska = kreirajFudbalskiTim("Finska", 3, 3, 2, 10, 10)
-const BiH = kreirajFudbalskiTim("Bosna i Hercegovina", 1, 3, 4, 9, 12)
-const Kazahstan = kreirajFudbalskiTim("Kazahstan", 0, 3, 5, 5, 20)
+const Francuska = new FudbalskiTim("Francuska")
+const Ukrajna = new FudbalskiTim("Ukrajna")
+const Finska = new FudbalskiTim("Finska")
+const BiH = new FudbalskiTim("Bosna i Hercegovina")
+const Kazahstan = new FudbalskiTim("Kazahstan")
+// console.log(Francuska)
 const timovi = [];
 timovi.push(Francuska, Ukrajna, Finska, BiH, Kazahstan)
+
+// ligra
+for (let i = 0; i < timovi.length; i++) {
+    const domaciTim = timovi[i];
+    for (let j = 0; j < timovi.length; j++) {
+        const gostujuciTim = timovi[j];
+        if (i != j) {
+
+            const brojGolovaDomacegTima = Math.trunc(Math.random() * 5);
+            const brojGolovaGostujucegTima = Math.trunc(Math.random() * 5);
+            if (brojGolovaDomacegTima > brojGolovaGostujucegTima) {
+                domaciTim.brojBodovaTimova += 3
+            domaciTim.brojPostignutihGolova += brojGolovaDomacegTima
+            domaciTim.brojPobjeda += 1
+            gostujuciTim.brojBodovaTimova += 0
+            gostujuciTim.brojPrimjljenihGolova += brojGolovaGostujucegTima
+            gostujuciTim.brojPoraza += 1
+            console.log(`${domaciTim.ime}  ${brojGolovaDomacegTima}:${brojGolovaGostujucegTima}  ${gostujuciTim.ime}`)
+        }
+        else if (brojGolovaDomacegTima == brojGolovaGostujucegTima) {
+            domaciTim.brojBodovaTimova += 1
+            domaciTim.brojPostignutihGolova += brojGolovaDomacegTima
+            domaciTim.brojNerjesenih +=1
+            gostujuciTim.brojNerjesenih +=1
+            gostujuciTim.brojBodovaTimova += 1
+            gostujuciTim.brojPrimjljenihGolova += brojGolovaGostujucegTima
+            console.log(`${domaciTim.ime}  ${brojGolovaDomacegTima}:${brojGolovaGostujucegTima}  ${gostujuciTim.ime}`)
+            
+        }
+        else {
+            domaciTim.brojBodovaTimova += 0
+            domaciTim.brojPostignutihGolova += brojGolovaDomacegTima
+            domaciTim.brojPoraza += 1
+            gostujuciTim.brojPobjeda += 1
+            gostujuciTim.brojBodovaTimova += 3
+            gostujuciTim.brojPrimjljenihGolova += brojGolovaGostujucegTima
+            console.log(`${domaciTim.ime}  ${brojGolovaDomacegTima}:${brojGolovaGostujucegTima}  ${gostujuciTim.ime}`)
+            
+        }
+    }
+
+    }
+
+}
+
+
 const pronadjiGolRazlikuIBodove = (array) => {
     for (let i = 0; i < array.length; i++) {
         const tim = array[i];
