@@ -117,6 +117,7 @@ const generateJMBG = (date, gender, birthPlace) => {
 // creaing transaction
 class Transaction_ID {
     static ID_transcation = 1  ;
+    transaction_ID;
     firstName;
     lastName;
     type;
@@ -124,7 +125,7 @@ class Transaction_ID {
     JMBG;
     amount;
     constructor (firstName, lastName,  type, bankAccount_ID, JMBG, amount)  {
-        this.Transaction_ID = "TB" + Transaction_ID.ID_transcation++ 
+        this.transaction_ID = "TransInBank" + Transaction_ID.ID_transcation++ 
         this.firstName = firstName;
         this.lastName = lastName;
         this.bankAccount_ID = bankAccount_ID;
@@ -137,6 +138,7 @@ class Transaction_ID {
 }
 class ATMTransaction_ID {
     static ID_transcation = 1  ;
+    transaction_ID;
     firstName;
     lastName;
     atmID;
@@ -145,7 +147,7 @@ class ATMTransaction_ID {
     JMBG;
     amount;
     constructor (firstName, lastName, atmID, type, bankAccount_ID, JMBG, amount)  {
-        this.Transaction_ID = "ATMB" + Transaction_ID.ID_transcation++ 
+        this.transaction_ID = "TransATM" + Transaction_ID.ID_transcation++ 
         this.firstName = firstName;
         this.lastName = lastName;
         this.bankAccount_ID = bankAccount_ID;
@@ -158,7 +160,8 @@ class ATMTransaction_ID {
     }
 }
 class EmployeeTransactions {
-    static ID_employeeTranscation = 1  ;
+    static ID_employeeTranscation = 1;
+    employeeTransaction_ID;
     firstName;
     lastName;
     type;
@@ -166,7 +169,7 @@ class EmployeeTransactions {
     JMBG;
     gender;
     constructor (firstName, lastName, type, birthDate, JMBG, gender)  {
-        this.employeeTransaction_ID = "ET" + EmployeeTransactions.ID_employeeTranscation++ 
+        this.employeeTransaction_ID = "TransEmployee" + EmployeeTransactions.ID_employeeTranscation++ 
         this.firstName = firstName;
         this.lastName = lastName;
         this.type = type;
@@ -177,7 +180,7 @@ class EmployeeTransactions {
         this.date= getDateAndTime().substring(0, 10);
     }
 }
-class ATMTransaction {
+class ATMTransaction {          // class for adding money from bank to atms
     static ID_atmTranscation = 1  ;
     atmTransactionsID;
     bankName;
@@ -186,7 +189,7 @@ class ATMTransaction {
     amount;
     type;
     constructor (bankName, atmID, atmLocation, amount, type)  {
-        this.atmTransactionsID = "ATMT" + ATMTransaction.ID_atmTranscation++ 
+        this.atmTransactionsID = "TransAddMoneyToAtm" + ATMTransaction.ID_atmTranscation++ 
         this.bankName = bankName;
         this.atmID = atmID;
         this.atmLocation = atmLocation;
@@ -206,7 +209,7 @@ class AccountTransactions {
     type;
     
     constructor (firstName, lastName,bankAccount_ID, pinCode,type) {
-        this.accountTransactionsID = "CAT" + AccountTransactions.ID_accountTransaction++;
+        this.accountTransactionsID = "TransCreateAcc" + AccountTransactions.ID_accountTransaction++;
         this.firstName = firstName;
         this.lastName = lastName;
         this.bankAccount_ID = bankAccount_ID;
@@ -230,7 +233,7 @@ class CardTransactions {
     type;
     
     constructor (firstName, lastName, bankAccount_ID, cardID , cardType,pinCode,type) {
-        this.cardTransactionsID = "TCT" + CardTransactions.ID_cardTransaction++;
+        this.cardTransactionsID = "TransCreateCard" + CardTransactions.ID_cardTransaction++;
         this.firstName = firstName;
         this.lastName = lastName;
         this.bankAccount_ID = bankAccount_ID;
@@ -255,7 +258,7 @@ class ChangePinTransaction {
     newPinCode;
     
     constructor (firstName, lastName, bankAccount_ID, type , oldPinCode,newPinCode) {
-        this.changePinTransactionID = "TCP" + ChangePinTransaction.ID_changePin++;
+        this.changePinTransactionID = "TransChangePin" + ChangePinTransaction.ID_changePin++;
         this.firstName = firstName;
         this.lastName = lastName;
         this.bankAccount_ID = bankAccount_ID;
@@ -269,6 +272,7 @@ class ChangePinTransaction {
 }
 class TransactionBetweenAccounts {
     static ID_TransactionBetweenAcoounts = 1;
+    transaction_ID;
     firstNameSender;
     lastNameSender;
     firstNameReciever;
@@ -280,7 +284,7 @@ class TransactionBetweenAccounts {
     JMBGReciever;
     amount;
      constructor (firstNameSender, lastNameSender, firstNameReciever, lastNameReciever, type, SenderAccount_ID, RecieverAccount_ID, JMBGSender, JMBGReciever, amount) {
-           this.transaction_ID = `TBBA` + TransactionBetweenAccounts.ID_TransactionBetweenAcoounts++
+           this.transaction_ID = `TransBeetweenAcc` + TransactionBetweenAccounts.ID_TransactionBetweenAcoounts++
            this.firstNameSender = firstNameSender;
            this.lastNameSender = lastNameSender;
            this.firstNameReciever = firstNameReciever;
@@ -328,6 +332,7 @@ class Person {
 
 class Atm {
     static atmID = 1;
+    atm_ID;
     bankName;
     bank_ID;
     balance = 0;
@@ -346,7 +351,7 @@ class Atm {
             person.cards.forEach(card => {
                 if (card.card_ID = cardID) {    // after that condition is that right card is used
                     const bankID = card.bank_ID
-                    if (person.pin == pin && bankID == this.bank_ID) {  // checking if pin is correct
+                    if (person.pin == pin) {  // checking if pin is correct
                         for (let i = 0; i < BANKS.length; i++) {
                             const bank = BANKS[i];
                             if (bank.bankName == card.bankName) {   // checking if bank is correct
@@ -355,14 +360,14 @@ class Atm {
                                         account.balance += amount
                                         bank.bankBudget += amount
                                         bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Deposit",account.bankAccount_ID,account.jmbg,amount));
-
                                     }
-                                });
-                            } else {            // if not then 10% is added for transaction cost
+                                    });
+                            } 
+                            else {            // if not then 10% is added for transaction cost
                                 bank.bankAccounts.forEach(account => {
                                     if (account.bankAccount_ID == card.bankAccount_ID) {
-                                        account.balance += amount * 1.1
-                                        bank.bankBudget += amount * 1.1
+                                        account.balance += (amount * 1.1)
+                                        bank.bankBudget += (amount * 1.1)
                                         bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Deposit",account.bankAccount_ID,account.jmbg,amount));
 
                                     }
@@ -378,7 +383,7 @@ class Atm {
         else console.log("ATM is not working.")
     }
 
-    witdrawMoney(person,cardID, pin, amount) {
+    withdrawMoney(person,cardID, pin, amount) {
             if (this.isWorking) {
                 person.cards.forEach(card => {
                     if (card.card_ID = cardID) {    
@@ -433,6 +438,7 @@ class Atm {
                                             bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"CheckBalance",account.bankAccount_ID,account.jmbg,account.balance));
 
                                         }
+                                        
                                     });
                                 } 
                             }
@@ -536,7 +542,7 @@ class Bank {
     fireEmploye(person) {
         this.employees.forEach(employee => {
             if (person.employee_ID = employee.employee_ID)
-            this.employees.slice(this.employees.indexOf(employee), 1)
+            this.employees.splice(this.employees.indexOf(employee), 1)
             this.employeesTransactions.push(new EmployeeTransactions (person.firstName,person.lastName,"fired",person.birthDate,person.jmbg,person.gender))
         });
         person.employee_ID = undefined;
@@ -549,7 +555,6 @@ class Bank {
     getCreateAccount(person, cardType, employeeid) {    // method for retriving method for creating account
         this.employees.forEach(employee => {
             if (employee.employee_ID == employeeid) {   // only employee can create new account
-                console.log("employee")
                 this.#CreateAccount(person, cardType)
             }
         });
@@ -570,7 +575,6 @@ class Bank {
         account.bank_ID = this.bank_ID
         this.bankAccounts.push(account)
         this.bankCards.push(card)
-        // constructor (firstName, pinCode, lastName,type) {
 
         this.accountTransactions.push(new AccountTransactions(person.firstName,person.lastName,account.bankAccount_ID,person.pin,"Created Account"))
         
@@ -643,6 +647,7 @@ class Bank {
         this.bankCards.forEach(card => {
             if (card.card_ID == cardID) {
                 this.bankCards.splice(this.bankCards.indexOf(card, 1))
+                person.cards.splice(person.cards.indexOf(card,1))
                 this.accountTransactions.push(new CardTransactions(person.firstName,person.lastName,card.bankAccount_ID,card.card_ID,card.cardType,person.pin,"revoked card"))
 
             }
@@ -673,7 +678,7 @@ class Bank {
             if (atm.atm_ID == atmID) {
                 atm.balance += amount
                 this.bankBudget -= amount
-                this.atmTransactions.push(new ATMTransaction(this.bankName, atm.atm_ID,atm.atmLocation,amount,"Add money to ATM"))
+                this.bankToAtmTransactions.push(new ATMTransaction(this.bankName, atm.atm_ID,atm.atmLocation,amount,"Add money to ATM"))
             }
 
         });
@@ -715,7 +720,7 @@ class Bank {
                     account.balance -= amount;
                     this.bankTransactions.push(new Transaction_ID(account.firstName,account.lastName,"Withdraw",account.bankAccount_ID,account.jmbg,amount));
                 }
-                else console.log("Na  akauntu broj " + account.account_ID + " nemate dovoljno sredstava na racunu");
+                else console.log(`${account.firstName} ${account.lastName}  you don't have enough money on account ${account.bankAccount_ID}`);
             }
 
         });
@@ -725,7 +730,7 @@ class Bank {
     checkBalance(account_ID1) {
         this.bankAccounts.forEach(account => {
             if (account.bankAccount_ID == account_ID1) {
-                console.log(`Vas racun iznosi ${account.balance}`);
+                console.log(`${account.firstName} ${account.lastName} your balance is ${account.balance}`);
                 this.bankTransactions.push(new Transaction_ID(account.firstName,account.lastName,"CheckBalance",account.bankAccount_ID,account.jmbg,account.balance));
             }
         });
@@ -796,54 +801,83 @@ NLB.hireEmployee(jane)
 // creating four atms and adding two atms to each bank
 
 const atm1 = new Atm("Slatina")
+atm1.OpenToBuissnesAtm()
 novaBanka.getAddAtm(atm1,1)
 atm1.addAtmToDB(atm1)
 const atm2 = new Atm("Brcanska Malta")
+atm2.OpenToBuissnesAtm()
 novaBanka.getAddAtm(atm2,1)
 atm2.addAtmToDB(atm2)
 const atm3 = new Atm("Slatina")
+atm3.OpenToBuissnesAtm()
 NLB.getAddAtm(atm3,2)
 atm3.addAtmToDB(atm3)
 const atm4 = new Atm("Sjenjak")
+atm4.OpenToBuissnesAtm()
 NLB.getAddAtm(atm4,2)
 atm4.addAtmToDB(atm4)
 
 
-// creating accounts for adis and wick in two banks
+// creating accounts for adis and wick in two banks, issuing and revoking card
 
 novaBanka.getCreateAccount(adis,"Visa",1)
 NLB.getCreateAccount(wick,"Maestro",2)
+// console.log(novaBanka.bankAccounts)
+// console.log(NLB.bankAccounts)
+novaBanka.getIssueCard(1,adis,"Maestro",1)
+// console.log(adis.cards)
+// console.log(novaBanka.bankCards)
+novaBanka.getRevokeCard(3,adis,1)
+// console.log(adis.cards)
+// console.log(novaBanka.bankCards)
 
-console.log(novaBanka.accountTransactions)
+// changing pin code 
 
-// bank1.getCreateAccount(adis, "Maestro", 1)
-// bank1.getCreateAccount(radnik1, "Maestro", 1)
-// // bank1.changePinCode(adis, 1, 7759)
-// const atm1 = new Atm("Tuzla")
-// ATMS.push(atm1)
+novaBanka.changePinCode(adis,1,5555)
+// console.log(adis.pin)
 
-// // PEOPLE.push(adis,radnik,radnik1)
-// atm1.OpenToBuissnesAtm()
-// bank1.addAtm(atm1)
-// bank1.addMoneyToAtm(1, 1000)
-// adis.insertCardInAtm()
-// // console.log(adis)
-// // bank1.issueCard(1, adis, "visa")
-// atm1.depositMoney(adis, 1, 1111, 100)
-// atm1.witdrawMoney(adis, 1, 1111, 1000)
-// atm1.checkBalance(adis, 1, 1111)
-// // console.log(bank1.bankAccounts)
-// // 
-// // const emp = new Employee(radnik)
-// // console.log(adis)
-// // bank1.hireEmployee(radnik1)
-// bank1.deposit(1,100)
-// bank1.deposit(1,1000)
-// bank1.withdraw(1,1000)
-// bank1.checkBalance(1)
-// bank1.transferMoney(1,2,100)
-// console.log(bank1.atmTransactions)
-// // console.log(adis)
-// // console.log(atm1)
-// // console.log(bank1.bankAccounts)
-// // bank1.findAccount(2,1234)
+// closing account and firing employee
+
+// console.log(NLB.bankAccounts)       // account id  = 2 
+NLB.getCloseAccount(2,wick,2)
+// console.log(NLB.bankAccounts)       
+// console.log(wick)       
+// console.log(NLB.employees)
+NLB.fireEmploye(jane)
+// console.log(NLB.employees)
+
+// adding money to atm
+
+novaBanka.getAddMoneyAtm(1,1000,1)
+// console.log(atm1)
+
+// making transactions in bank
+
+novaBanka.deposit(1,100)
+novaBanka.withdraw(1,50)
+novaBanka.checkBalance(1)
+
+// making transactions in atm
+
+atm1.depositMoney(adis,1,5555,20)
+atm1.withdrawMoney(adis,1,5555,10)
+atm1.checkBalance(adis,1,5555)
+
+// making transaction in atm from different bank and checking account in my bank
+// atm3.depositMoney(adis,1,5555,100)
+// atm1.checkBalance(adis,1,5555)
+// console.log(adis.cards)
+
+// novaBanka.findAccount(1,1234)
+
+// checking if withdraw works
+
+// novaBanka.withdraw(1,1000)
+// atm1.witdrawMoney(adis,1,5555,1000)
+
+// testing transactions
+
+// console.log(novaBanka.atmTransactions)
+// console.log(novaBanka.bankToAtmTransactions)
+// console.log(novaBanka.bankTransactions)
+console.log(NLB.employeesTransactions)
