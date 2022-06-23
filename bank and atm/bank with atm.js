@@ -64,14 +64,14 @@ const generateBirthDate = () => {
     return dateOfBirth;
 }
 const generateJMBG = (date, gender, birthPlace) => {
-    /*  JMBG je individualna i neponovljiva oznaka identifikacionih podataka o licu i sastoji se od 13 cifara svrstanih u 6 grupa, i to:
-        I grupa dan rođenja (dvije cifre)
-        II grupa mjesec rođenja (dvije cifre)
-        III grupa godina rođenja (tri cifre)
-        IV grupa broj registra JMB - registraciona područja (dvije cifre)
-        V grupa kombinacija pola i rednog broja za lica rođena istog dana (tri cifre) - muškarci 000-499 - žene 500-999
-        VI grupa kontrolni broj (jedna cifra). 
-        Zakon on JMBG BiH: https://advokat-prnjavorac.com/zakoni/Zakon-o-JMB-BiH.pdf 
+    /*  
+        I group day of birth (two digits)
+        II group month of birth (two digits)
+        III group year of birth (last three digits)
+        IV group- place of birth, from 14 to 19 -  (two digits) 
+        V group  (three digits) - male 000-499  female 500-999
+        VI group control digit 
+    FM
     */
     let JMBG = '';
 
@@ -296,7 +296,7 @@ class Bank {
     bankTransactions = []      // array with all transaction in bank
     bankToAtmTransactions = []  // array with transactions from bank to atms
     atmTransactions = []           // array with all transaction in atms
-    allUsers = []                   // all users in bank
+    employeesTransactions = []                   // all transaction regarding employees
     bankLocation;
     bankBudget;         // starting budget for banks
     bankCards = [];          // array with all cards in bank
