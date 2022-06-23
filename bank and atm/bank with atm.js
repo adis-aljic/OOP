@@ -525,7 +525,8 @@ class Bank {
         });
     }
 
-    hireEmployee(person) {
+    hireManager(person) {
+        person.role = "Manager"
         person.employee_ID = Bank.employeeID++
         person.hasAccInBank = false
         person.isEmployed = true
@@ -534,17 +535,32 @@ class Bank {
         this.employees.push(person)
         this.employeesTransactions.push(new EmployeeTransactions (person.firstName,person.lastName,"hired",person.birthDate,person.jmbg,person.gender))
     }
+    hireEmployee(person, manager) {
+        if (manager.role == "Manager") {
+
+            person.employee_ID = Bank.employeeID++
+            person.hasAccInBank = false
+            person.isEmployed = true
+            person.employeeBankID = this.bank_ID
+            person.employeeBankName = this.bankName
+            this.employees.push(person)
+            this.employeesTransactions.push(new EmployeeTransactions (person.firstName,person.lastName,"hired",person.birthDate,person.jmbg,person.gender))
+        }
+        else console.log(`You can't hire person, you are not manager`)
+    }
     fireEmploye(person) {
         this.employees.forEach(employee => {
-            if (person.employee_ID = employee.employee_ID)
-            this.employees.splice(this.employees.indexOf(employee), 1)
-            this.employeesTransactions.push(new EmployeeTransactions (person.firstName,person.lastName,"fired",person.birthDate,person.jmbg,person.gender))
+            if (person.employee_ID = employee.employee_ID && employee.role == "Manager") {
+
+                person.employee_ID = undefined;
+                person.hasAccInBank = false
+                person.isEmployed = false
+                person.employeeBankID = undefined
+                person.employeeBankName = undefined
+                this.employees.splice(this.employees.indexOf(employee), 1)
+                this.employeesTransactions.push(new EmployeeTransactions (person.firstName,person.lastName,"fired",person.birthDate,person.jmbg,person.gender))
+            }
         });
-        person.employee_ID = undefined;
-        person.hasAccInBank = false
-        person.isEmployed = false
-        person.employeeBankID = undefined
-        person.employeeBankName = undefined
 
     }
     getCreateAccount(person, cardType, employeeid) {    // method for retriving method for creating account
@@ -652,7 +668,7 @@ class Bank {
     }
     getAddAtm(atmName, employeeid) {    // method for retriving method for adding atms
         this.employees.forEach(employee => {
-            if (employee.employee_ID == employeeid) {   // only employee can add atm
+            if (employee.employee_ID == employeeid && employee.role == "Manager") {   // only employee can add atm
                 this.#addAtm(atmName) 
             }
         });}
@@ -664,7 +680,7 @@ class Bank {
     }
     getAddMoneyAtm(atmID,amount ,employeeid) {    // method for adding money to atm
         this.employees.forEach(employee => {
-            if (employee.employee_ID == employeeid) {   // only employee can add money to atm
+            if (employee.employee_ID == employeeid && employee.role == "Manager") {   // only manager can add money to atm
                 this.#addMoneyToAtm(atmID,amount) 
             }
         });}
@@ -681,7 +697,7 @@ class Bank {
 
     getCloseAtm(atmID ,employeeid) {    // method for closing  atm
         this.employees.forEach(employee => {
-            if (employee.employee_ID == employeeid) {   // only employee can close atm
+            if (employee.employee_ID == employeeid && employee.role == "Manager") {   // only manager can close atm
                 this.#closeAtm(atmID) 
             }
         });}
@@ -780,7 +796,7 @@ novaBanka.addBankToDB(novaBanka)
 const NLB = new Bank("NLB", "Tuzla", 100000)
 NLB.addBankToDB(NLB)
 
-// creating 4 person and adding them to DB, and creating two employees
+// creating 5 persons and adding them to DB, and creating two employees
 
 const adis = new Person("Adis", "Aljic", "M", "Tuzla")
 adis.addPersonToDB(adis)
@@ -790,9 +806,12 @@ const jane = new Person("Jane","Doe","F","Tuzla")       // employeeID = 2
 jane.addPersonToDB(jane)
 const wick = new Person ("John","Wick","M","LA")
 wick.addPersonToDB(wick)
-novaBanka.hireEmployee(john)
-NLB.hireEmployee(jane)
-
+novaBanka.hireManager(john)     
+NLB.hireManager(jane)
+const saban = new Person("Saban", "Sabanic","M","Ozdrinje")
+novaBanka.hireEmployee(saban,john)
+console.log(saban)
+console.log(john)
 // creating four atms and adding two atms to each bank
 
 const atm1 = new Atm("Slatina")
