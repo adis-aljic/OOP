@@ -3,6 +3,9 @@
 // zavrsiti transfermoney u banci
 //testirati close acc close atm
 
+const { timeStamp } = require("console")
+const { type } = require("os")
+
 // array with all banks, all atms and all people
 const DB = []
 const BANKS = []
@@ -111,8 +114,189 @@ const generateJMBG = (date, gender, birthPlace) => {
 
     return JMBG;
 }
+// creaing transaction
+class Transaction_ID {
+    static ID_transcation = 1  ;
+    firstName;
+    lastName;
+    type;
+    bankAccount_ID;
+    JMBG;
+    amount;
+    constructor (firstName, lastName,  type, bankAccount_ID, JMBG, amount)  {
+        this.Transaction_ID = "TB" + Transaction_ID.ID_transcation++ 
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bankAccount_ID = bankAccount_ID;
+        this.type = type;
+        this.amount = amount
+        this.JMBG = JMBG, 
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+    }
+}
+class ATMTransaction_ID {
+    static ID_transcation = 1  ;
+    firstName;
+    lastName;
+    atmID;
+    type;
+    bankAccount_ID;
+    JMBG;
+    amount;
+    constructor (firstName, lastName, atmID, type, bankAccount_ID, JMBG, amount)  {
+        this.Transaction_ID = "ATMB" + Transaction_ID.ID_transcation++ 
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bankAccount_ID = bankAccount_ID;
+        this.atmID = atmID
+        this.type = type;
+        this.amount = amount
+        this.JMBG = JMBG, 
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+    }
+}
+class EmployeeTransactions {
+    static ID_employeeTranscation = 1  ;
+    firstName;
+    lastName;
+    type;
+    birthDate;
+    JMBG;
+    gender;
+    constructor (firstName, lastName, type, birthDate, JMBG, gender)  {
+        this.employeeTransaction_ID = "ET" + EmployeeTransactions.ID_employeeTranscation++ 
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.type = type;
+        this.birthDate = birthDate;
+        this.JMBG = JMBG;
+        this.gender = gender;
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+    }
+}
+class ATMTransaction {
+    static ID_atmTranscation = 1  ;
+    atmTransactionsID;
+    bankName;
+    atmID;
+    atmLocation;
+    amount;
+    type;
+    constructor (bankName, atmID, atmLocation, amount, type)  {
+        this.atmTransactionsID = "ATMT" + ATMTransaction.ID_atmTranscation++ 
+        this.bankName = bankName;
+        this.atmID = atmID;
+        this.atmLocation = atmLocation;
+        this.amount = amount;
+        this.type = type;
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+    }
+}
+class AccountTransactions {
+    static ID_accountTransaction = 1;
+    accountTransactionsID;
+    firstName;
+    lastName;
+    bankAccount_ID;
+    pinCode;
+    type;
+    
+    constructor (firstName, lastName,bankAccount_ID, pinCode,type) {
+        this.accountTransactionsID = "CAT" + AccountTransactions.ID_accountTransaction++;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bankAccount_ID = bankAccount_ID;
+        this.pinCode = pinCode;
+        this.type = type;
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+        
+    }
 
+}
+class CardTransactions {
+    static ID_cardTransaction = 1;
+    cardTransactionsID;
+    firstName;
+    lastName;
+    bankAccount_ID;
+    cardID
+    cardType;
+    pinCode;
+    type;
+    
+    constructor (firstName, lastName, bankAccount_ID, cardID , cardType,pinCode,type) {
+        this.cardTransactionsID = "TCT" + CardTransactions.ID_cardTransaction++;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bankAccount_ID = bankAccount_ID;
+        this.cardID = cardID;
+        this.cardType = cardType;
+        this.pinCode= pinCode;
+        this.type = type;
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+        
+    }
+}
 
+class ChangePinTransaction {
+    static ID_changePin = 1;
+    changePinTransactionID;
+    firstName;
+    lastName;
+    bankAccount_ID;
+    type;
+    oldPinCode;
+    newPinCode;
+    
+    constructor (firstName, lastName, bankAccount_ID, type , oldPinCode,newPinCode) {
+        this.changePinTransactionID = "TCP" + ChangePinTransaction.ID_changePin++;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bankAccount_ID = bankAccount_ID;
+        this.type = type;
+        this.oldPinCode = oldPinCode;
+        this.newPinCode = newPinCode
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+        
+    }
+}
+class TransactionBetweenAccounts {
+    static ID_TransactionBetweenAcoounts = 1;
+    firstNameSender;
+    lastNameSender;
+    firstNameReciever;
+    lastNameReciever;
+    type;
+    SenderAccount_ID;
+    RecieverAccount_ID;
+    JMBGSender;
+    JMBGReciever;
+    amount;
+     constructor (firstNameSender, lastNameSender, firstNameReciever, lastNameReciever, type, SenderAccount_ID, RecieverAccount_ID, JMBGSender, JMBGReciever, amount) {
+           this.transaction_ID = `TBBA` + TransactionBetweenAccounts.ID_TransactionBetweenAcoounts++
+           this.firstNameSender = firstNameSender;
+           this.lastNameSender = lastNameSender;
+           this.firstNameReciever = firstNameReciever;
+           this.lastNameReciever = lastNameReciever;
+           this.type = type;
+           this.SenderAccount_ID = SenderAccount_ID;
+           this.RecieverAccount_ID = RecieverAccount_ID
+           this.JMBGSender = JMBGSender;
+           this.JMBGReciever = JMBGReciever;
+           this.amount = amount;
+            this.time = getDateAndTime().substring(11)
+            this.date = getDateAndTime().substring(0,10)
+        
+        }
+    
+}
 class Person {
     firstName;
     lastName;
@@ -170,6 +354,8 @@ class Atm {
                                     if (account.bankAccount_ID == card.bankAccount_ID) {
                                         account.balance += amount
                                         bank.bankBudget += amount
+                                        bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Deposit",account.bankAccount_ID,account.jmbg,amount));
+
                                     }
                                 });
                             } else {            // if not then 10% is added for transaction cost
@@ -177,6 +363,8 @@ class Atm {
                                     if (account.bankAccount_ID == card.bankAccount_ID) {
                                         account.balance += amount * 1.1
                                         bank.bankBudget += amount * 1.1
+                                        bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Deposit",account.bankAccount_ID,account.jmbg,amount));
+
                                     }
                                 });
 
@@ -203,14 +391,20 @@ class Atm {
                                         if (account.bankAccount_ID == card.bankAccount_ID && account.balance >= amount) {
                                             account.balance -= amount
                                             bank.bankBudget -= amount
+                                            bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Withdraw",account.bankAccount_ID,account.jmbg,amount));
+
                                         }
                                         else console.log(`Nemate dovoljno sredstava na racunu`)
+                                        bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Insufficient money on account. Transaction declined.",account.bankAccount_ID,account.jmbg,amount));
+
                                     });
                                 } else {            // if not then 10% is added for transaction cost
                                     bank.bankAccounts.forEach(account => {
                                         if (account.bankAccount_ID == card.bankAccount_ID) {
                                             account.balance += amount * 1.1
                                             bank.bankBudget += amount * 1.1
+                                            bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Withdraw",account.bankAccount_ID,account.jmbg,amount));
+
                                         }
                                     });
     
@@ -236,6 +430,8 @@ class Atm {
                                     bank.bankAccounts.forEach(account => {
                                         if (account.bankAccount_ID == card.bankAccount_ID) {
                                             console.log(`${person.firstName} ${person.lastName} vas racun iznosi ${account.balance}`);
+                                            bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"CheckBalance",account.bankAccount_ID,account.jmbg,account.balance));
+
                                         }
                                     });
                                 } 
@@ -250,6 +446,7 @@ class Atm {
     }
     OpenToBuissnesAtm() {
         this.isWorking = true;
+
     }
 }
 
@@ -297,6 +494,7 @@ class Bank {
     bankToAtmTransactions = []  // array with transactions from bank to atms
     atmTransactions = []           // array with all transaction in atms
     employeesTransactions = []                   // all transaction regarding employees
+    accountTransactions = []        // all transactions regarding accounts and cards in bank
     bankLocation;
     bankBudget;         // starting budget for banks
     bankCards = [];          // array with all cards in bank
@@ -333,11 +531,13 @@ class Bank {
         person.employeeBankID = this.bank_ID
         person.employeeBankName = this.bankName
         this.employees.push(person)
+        this.employeesTransactions.push(new EmployeeTransactions (person.firstName,person.lastName,"hired",person.birthDate,person.jmbg,person.gender))
     }
     fireEmploye(person) {
         this.employees.forEach(employee => {
             if (person.employee_ID = employee.employee_ID)
-                this.employees.slice(this.employees.indexOf(employee), 1)
+            this.employees.slice(this.employees.indexOf(employee), 1)
+            this.employeesTransactions.push(new EmployeeTransactions (person.firstName,person.lastName,"fired",person.birthDate,person.jmbg,person.gender))
         });
         person.employee_ID = undefined;
         person.hasAccInBank = false
@@ -360,31 +560,47 @@ class Bank {
         let card = new Card(this.bankName, person.firstName, person.lastName, account.bankAccount_ID, cardType)
         // creating card, adding bank ID
         card.bank_ID = this.bank_ID
+        
         person.hasAccInBank = true;
         person.cards.push(card)      // adding card to person
         account.setPin(1111) // it should be first pin generated with 4 random number but for purpose of testing is 1111
         person.pin = account.getPin()
         account.cards.push(card)
+        this.accountTransactions.push(new CardTransactions(person.firstName,person.lastName,account.bankAccount_ID,card.card_ID,card.cardType,person.pin,"new Card"))
         account.bank_ID = this.bank_ID
         this.bankAccounts.push(account)
         this.bankCards.push(card)
+        // constructor (firstName, pinCode, lastName,type) {
+
+        this.accountTransactions.push(new AccountTransactions(person.firstName,person.lastName,account.bankAccount_ID,person.pin,"Created Account"))
+        
     }
     changePinCode(person, bankAccount_ID, newPinCode) { // method for changing pin code
         this.bankAccounts.forEach(account => {
             if (account.bankAccount_ID == bankAccount_ID && account.jmbg == person.jmbg &&
                 newPinCode < 10000 && newPinCode > 999 && !isNaN(newPinCode)) {
-                account.setPin(newPinCode)
-                person.pin = account.getPin()
-                console.log(`Hello ${person.firstName} ${person.lastName}, you are succesfuly changed your pin code. 
-                Your new code is ${person.pin} `)
+                    const oldPinCode = person.pin;
+                    account.setPin(newPinCode)
+                    person.pin = account.getPin()
+                    console.log(`Hello ${person.firstName} ${person.lastName}, you are succesfuly changed your pin code. 
+                    Your new code is ${person.pin} `)
+                    this.accountTransactions.push(new ChangePinTransaction(person.firstName,person.lastName,account.bankAccount_ID,"Change pin",oldPinCode,person.pin))
             }
             else console.log(`Pin code is invalid. Please enter pin code as combination of 4 numbers.`)
         });
 
     }
-    closeAccount(account_ID, person) {
+    getCloseAccount(account_ID,person , employeeid) {    // method for retriving method for closing account
+        this.employees.forEach(employee => {
+            if (employee.employee_ID == employeeid) {   // only employee can close  account
+                this.#closeAccount(account_ID, person)
+            }
+        });
+    }
+    #closeAccount(account_ID, person) {
         this.bankAccounts.forEach(account => {
-            if (account_ID = account.bankAccount_ID) {
+            if (account_ID == account.bankAccount_ID) {
+                this.accountTransactions.push(new AccountTransactions(person.firstName,person.lastName,account.bankAccount_ID,person.pin,"Closed Account"))
                 this.bankAccounts.splice(this.bankAccounts.indexOf(account), 1)
                 person.hasAccInBank = false
                 person.pin = undefined
@@ -396,55 +612,96 @@ class Bank {
             }
         });
     }
-    issueCard(bankAccount_ID, person, cardType) {
+    getIssueCard(bankAccount_ID, person, cardType, employeeid) {    // method for retriving method for issuing  new cards
+        this.employees.forEach(employee => {
+            if (employee.employee_ID == employeeid) {   // only employee can issue new carad
+                this.#issueCard(bankAccount_ID, person, cardType) 
+            }
+        });
+    }
+    #issueCard(bankAccount_ID, person, cardType) {
         let card = new Card(this.bankName, person.firstName, person.lastName, bankAccount_ID, cardType)
         card.bank_ID = this.bank_ID
         person.cards.push(card)      // adding card to person
         this.bankAccounts.forEach(account => {
             if (account.bankAccount_ID == bankAccount_ID) {
                 account.cards.push(card)
+                this.accountTransactions.push(new CardTransactions(person.firstName,person.lastName,account.bankAccount_ID,card.card_ID,card.cardType,person.pin,"new Card"))
             }
         });
         this.bankCards.push(card)
 
+
     }
-    revokeCard(cardID, person) {
+    getRevokeCard(card_ID, person, employeeid) {    // method for retriving method for revoking  new cards
+        this.employees.forEach(employee => {
+            if (employee.employee_ID == employeeid) {   // only employee can revoke carad
+                this.#revokeCard(card_ID, person) 
+            }
+        });}
+    #revokeCard(cardID, person) {
         this.bankCards.forEach(card => {
             if (card.card_ID == cardID) {
                 this.bankCards.splice(this.bankCards.indexOf(card, 1))
+                this.accountTransactions.push(new CardTransactions(person.firstName,person.lastName,card.bankAccount_ID,card.card_ID,card.cardType,person.pin,"revoked card"))
+
             }
             person.pin = undefined
         });
 
     }
-    addAtm(atm) {
-        atm.bankName = this.bankName
-        atm.bank_ID = this.bank_ID
+    getAddAtm(atmName, employeeid) {    // method for retriving method for adding atms
+        this.employees.forEach(employee => {
+            if (employee.employee_ID == employeeid) {   // only employee can add atm
+                this.#addAtm(atmName) 
+            }
+        });}
+    #addAtm(atmName) {
+        atmName.bankName = this.bankName
+        atmName.bank_ID = this.bank_ID
+        this.atmTransactions.push(new ATMTransaction(this.bankName, atmName.atm_ID,atmName.atmLocation,"","Add ATM"))
+
     }
-    addMoneyToAtm(atmID, amount) {
+    getAddMoneyAtm(atmID,amount ,employeeid) {    // method for adding money to atm
+        this.employees.forEach(employee => {
+            if (employee.employee_ID == employeeid) {   // only employee can add money to atm
+                this.#addMoneyToAtm(atmID,amount) 
+            }
+        });}
+    #addMoneyToAtm(atmID, amount) {
         ATMS.forEach(atm => {
             if (atm.atm_ID == atmID) {
                 atm.balance += amount
                 this.bankBudget -= amount
+                this.atmTransactions.push(new ATMTransaction(this.bankName, atm.atm_ID,atm.atmLocation,amount,"Add money to ATM"))
             }
 
         });
     }
-    closeAtm(atmID) {
+
+    getCloseAtm(atmID ,employeeid) {    // method for closing  atm
+        this.employees.forEach(employee => {
+            if (employee.employee_ID == employeeid) {   // only employee can close atm
+                this.#closeAtm(atmID) 
+            }
+        });}
+    #closeAtm(atmID) {
         ATMS.forEach(atm => {
             if (atm.atm_ID == atmID) {
                 this.bankBudget += atm.balance
                 atm.balance = 0
                 this.isWorking = false
+                this.atmTransactions.push(new TransactionToAtm(this.bankName, atm.atm_ID,atm.atmLocation,"","closed ATM"))
+
             }
         });
     }
     deposit(account_ID1, amount) {
-        this.accounts.forEach(account => {
-            if (account.account_ID == account_ID1) {
+        this.bankAccounts.forEach(account => {
+            if (account.bankAccount_ID == account_ID1) {
                 account.balance += amount;
                 this.bankBudget += amount
-                // this.transactions.push(createTransaction( account.firstName, account.lastName, transactions.length, "deposit", account.account_ID, account.JMBG, deposit));
+                this.bankTransactions.push(new Transaction_ID(account.firstName,account.lastName,"Deposit",account.bankAccount_ID,account.jmbg,amount));
             }
 
         });
@@ -452,11 +709,11 @@ class Bank {
 
     }
     withdraw(account_ID1, amount) {
-        this.accounts.forEach(account => {
-            if (account.account_ID == account_ID1) {
+        this.bankAccounts.forEach(account => {
+            if (account.bankAccount_ID == account_ID1) {
                 if (account.balance >= amount) {
                     account.balance -= amount;
-                    // this.transactions.push(createTransaction(account.firstName, account.lastName, transactions.length, "withdraw", account.account_ID, account.JMBG, withdraw));
+                    this.bankTransactions.push(new Transaction_ID(account.firstName,account.lastName,"Withdraw",account.bankAccount_ID,account.jmbg,amount));
                 }
                 else console.log("Na  akauntu broj " + account.account_ID + " nemate dovoljno sredstava na racunu");
             }
@@ -466,25 +723,24 @@ class Bank {
 
     }
     checkBalance(account_ID1) {
-        this.accounts.forEach(account => {
-            if (account.account_ID == account_ID1) {
+        this.bankAccounts.forEach(account => {
+            if (account.bankAccount_ID == account_ID1) {
                 console.log(`Vas racun iznosi ${account.balance}`);
-                // this.transactions.push(createTransaction(account.firstName, account.lastName, transactions.length, "check Balance", account.account_ID, account.JMBG, account.balance));
+                this.bankTransactions.push(new Transaction_ID(account.firstName,account.lastName,"CheckBalance",account.bankAccount_ID,account.jmbg,account.balance));
             }
         });
     }
     transferMoney(account_ID1, account_ID2, amount) { // account1 is account from which are send money, account2 is acc to which are
-        this.accounts.forEach(account1 => {             // sent money
-            this.accounts.forEach(account2 => {
+        this.bankAccounts.forEach(account1 => {             // sent money
+            this.bankAccounts.forEach(account2 => {
 
-                if (account1.account_ID == account_ID1 && account2.account_ID == account_ID2) {
+                if (account1.bankAccount_ID == account_ID1 && account2.bankAccount_ID == account_ID2) {
 
-                    this.account1.balance -= amount;
-                    this.account2.balance += amount;
-                    // this.transactions.push(createTransactionForTransferingMoney( account.bank_ID,account.firstName, account.lastName, account1.firstName, account1.lastName, transactions.length, "transfer money", account.account_ID, account1.account_ID, account.JMBG, account1.JMBG, amount)) 
+                    account1.balance -= amount;
+                    account2.balance += amount;
+                    this.bankTransactions.push(new TransactionBetweenAccounts(account1.firstName,account1.lastName,account2.firstName,account2.lastName,"Transfering Money",account1.bankAccount_ID,account2.bankAccount_ID,account1.jmbg,account2.jmbg,amount)) 
             }                
             });
-
         });
     }
 }
@@ -515,36 +771,79 @@ class Card {
     }
 
 }
-const bank1 = new Bank("banka", "tuzla", 10000)
-const bank2 = new Bank("banka1", "tuzla", 111)
-BANKS.push(bank1)
+
+// TESTING
+
+// creating two banks and adding banks to DB
+const novaBanka = new Bank("Nova Banka", "Tuzla", 100000)
+novaBanka.addBankToDB(novaBanka)
+const NLB = new Bank("NLB", "Tuzla", 100000)
+NLB.addBankToDB(NLB)
+
+// creating 4 person and adding them to DB, and creating two employees
+
 const adis = new Person("Adis", "Aljic", "M", "Tuzla")
 adis.addPersonToDB(adis)
-const radnik = new Person("radnik", "prezime", "F", "Tuzla")
-const radnik1 = new Person("radnik", "prezime", "F", "Tuzla")
-bank1.hireEmployee(radnik)
-bank1.getCreateAccount(adis, "Maestro", 1)
-// bank1.changePinCode(adis, 1, 7759)
-const atm1 = new Atm("Tuzla")
-ATMS.push(atm1)
+const john = new Person("John", "Doe", "M", "Tuzla")    // employeeID = 1
+john.addPersonToDB(john)
+const jane = new Person("Jane","Doe","F","Tuzla")       // employeeID = 2
+jane.addPersonToDB(jane)
+const wick = new Person ("John","Wick","M","LA")
+wick.addPersonToDB(wick)
+novaBanka.hireEmployee(john)
+NLB.hireEmployee(jane)
 
-// PEOPLE.push(adis,radnik,radnik1)
-atm1.OpenToBuissnesAtm()
-bank1.addAtm(atm1)
-bank1.addMoneyToAtm(1, 1000)
-adis.insertCardInAtm()
-// console.log(adis)
-// bank1.issueCard(1, adis, "visa")
-atm1.depositMoney(adis, 1, 1111, 100)
-atm1.witdrawMoney(adis, 1, 1111, 1000)
-atm1.checkBalance(adis, 1, 1111)
-// console.log(bank1.bankAccounts)
-// 
-// const emp = new Employee(radnik)
-// console.log(adis)
-// bank1.hireEmployee(radnik1)
-// console.log(bank1.bankAccounts)
-// console.log(adis)
-// console.log(atm1)
-// console.log(bank1.bankAccounts)
-bank1.findAccount(1,1234)
+// creating four atms and adding two atms to each bank
+
+const atm1 = new Atm("Slatina")
+novaBanka.getAddAtm(atm1,1)
+atm1.addAtmToDB(atm1)
+const atm2 = new Atm("Brcanska Malta")
+novaBanka.getAddAtm(atm2,1)
+atm2.addAtmToDB(atm2)
+const atm3 = new Atm("Slatina")
+NLB.getAddAtm(atm3,2)
+atm3.addAtmToDB(atm3)
+const atm4 = new Atm("Sjenjak")
+NLB.getAddAtm(atm4,2)
+atm4.addAtmToDB(atm4)
+
+
+// creating accounts for adis and wick in two banks
+
+novaBanka.getCreateAccount(adis,"Visa",1)
+NLB.getCreateAccount(wick,"Maestro",2)
+
+console.log(novaBanka.accountTransactions)
+
+// bank1.getCreateAccount(adis, "Maestro", 1)
+// bank1.getCreateAccount(radnik1, "Maestro", 1)
+// // bank1.changePinCode(adis, 1, 7759)
+// const atm1 = new Atm("Tuzla")
+// ATMS.push(atm1)
+
+// // PEOPLE.push(adis,radnik,radnik1)
+// atm1.OpenToBuissnesAtm()
+// bank1.addAtm(atm1)
+// bank1.addMoneyToAtm(1, 1000)
+// adis.insertCardInAtm()
+// // console.log(adis)
+// // bank1.issueCard(1, adis, "visa")
+// atm1.depositMoney(adis, 1, 1111, 100)
+// atm1.witdrawMoney(adis, 1, 1111, 1000)
+// atm1.checkBalance(adis, 1, 1111)
+// // console.log(bank1.bankAccounts)
+// // 
+// // const emp = new Employee(radnik)
+// // console.log(adis)
+// // bank1.hireEmployee(radnik1)
+// bank1.deposit(1,100)
+// bank1.deposit(1,1000)
+// bank1.withdraw(1,1000)
+// bank1.checkBalance(1)
+// bank1.transferMoney(1,2,100)
+// console.log(bank1.atmTransactions)
+// // console.log(adis)
+// // console.log(atm1)
+// // console.log(bank1.bankAccounts)
+// // bank1.findAccount(2,1234)
