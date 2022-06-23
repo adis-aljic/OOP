@@ -1,7 +1,6 @@
-// napraviti find account
 // transakcije za sve u banci i u atmu
 // skontat da se automatski pusha u glavni array bp
-// zavrsiti wid,dep i check i u banci i u atmu
+// zavrsiti transfermoney u banci
 //testirati close acc close atm
 
 // array with all banks, all atms and all people
@@ -9,7 +8,10 @@ const DB = []
 const BANKS = []
 const ATMS = []
 const PEOPLE = []
-DB.push(BANKS, ATMS, PEOPLE)
+
+const addAllToDB = () =>{       // function for add all into database
+    DB.push(BANKS,ATMS,PEOPLE)
+}
 
 const generateBirthDate = () => {
     //check for leapYear
@@ -119,19 +121,22 @@ class Person {
     hasAccInBank;
     gender;
     birthPlace;
-    cards = []
+    cards = [] // list of cards person have
     constructor(firstName, lastName, gender, birthPlace) {
         this.firstName = firstName,
             this.lastName = lastName,
             this.birthDate = generateBirthDate(),
-            this.jmbg = generateJMBG(this.birthDate, this.gender, this.birthPlace),
+            // this.jmbg = generateJMBG(this.birthDate, this.gender, this.birthPlace),
+            this.jmbg = 1234,   // this is unique jmbg for all persons, for only testing purpose. In reality jmbg is randomly generate
             this.gender = gender
         this.birthPlace = birthPlace
-        // this.jmbg = 1234,   // this is unique jmbg for all persons, for only testing purpose. In reality jmbg is randomly generate
         this.hasAccInBank = false
 
-    }
 
+    }
+    addPersonToDB(person) {      // method for adding person into database
+        PEOPLE.push(person)
+    }
     insertCardInAtm() { console.log(`Hello ${this.firstName} ${this.lastName} please enter your pin code.`); }
     removeCardFromAtm(person) { console.log(`Thank you ${this.firstName} ${this.lastName} for being our customer. Please take card.`); }
 }
@@ -149,21 +154,32 @@ class Atm {
         this.atmLocation = atmLocation
         this.isWorking = false
     }
+    addAtmToDB(atm) {
+        ATMS.push(atm)
+    }
     depositMoney(person, cardID, pin, amount) {
-        if (this.isWorking) {
+        if (this.isWorking) {       // first condition is that atm is working
             person.cards.forEach(card => {
-                if (card.card_ID = cardID) {
+                if (card.card_ID = cardID) {    // after that condition is that right card is used
                     const bankID = card.bank_ID
-                    if (person.pin == pin && bankID == this.bank_ID) {
+                    if (person.pin == pin && bankID == this.bank_ID) {  // checking if pin is correct
                         for (let i = 0; i < BANKS.length; i++) {
                             const bank = BANKS[i];
-                            if (bank.bankName == card.bankName) {
+                            if (bank.bankName == card.bankName) {   // checking if bank is correct
                                 bank.bankAccounts.forEach(account => {
                                     if (account.bankAccount_ID == card.bankAccount_ID) {
                                         account.balance += amount
                                         bank.bankBudget += amount
                                     }
                                 });
+                            } else {            // if not then 10% is added for transaction cost
+                                bank.bankAccounts.forEach(account => {
+                                    if (account.bankAccount_ID == card.bankAccount_ID) {
+                                        account.balance += amount * 1.1
+                                        bank.bankBudget += amount * 1.1
+                                    }
+                                });
+
                             }
                         }
                     }
@@ -174,11 +190,65 @@ class Atm {
         else console.log("ATM is not working.")
     }
 
-    witdrawMoney(person, pin, bankName) {
+    witdrawMoney(person,cardID, pin, amount) {
+            if (this.isWorking) {
+                person.cards.forEach(card => {
+                    if (card.card_ID = cardID) {    
+                        const bankID = card.bank_ID
+                        if (person.pin == pin && bankID == this.bank_ID) { 
+                            for (let i = 0; i < BANKS.length; i++) {
+                                const bank = BANKS[i];
+                                if (bank.bankName == card.bankName) {   
+                                    bank.bankAccounts.forEach(account => {
+                                        if (account.bankAccount_ID == card.bankAccount_ID && account.balance >= amount) {
+                                            account.balance -= amount
+                                            bank.bankBudget -= amount
+                                        }
+                                        else console.log(`Nemate dovoljno sredstava na racunu`)
+                                    });
+                                } else {            // if not then 10% is added for transaction cost
+                                    bank.bankAccounts.forEach(account => {
+                                        if (account.bankAccount_ID == card.bankAccount_ID) {
+                                            account.balance += amount * 1.1
+                                            bank.bankBudget += amount * 1.1
+                                        }
+                                    });
+    
+                                }
+                            }
+                        }
+                        else console.log(`${person.firstName} ${person.lastName} your information is not valid.`)
+                    }
+                });
+            }
+            else console.log("ATM is not working.")
 
     }
-    checkBalance(person, pin, bankName) { }
-    OpenToBuissnesAtm(bank) {
+    checkBalance(person,cardID, pin) {
+            if (this.isWorking) {
+                person.cards.forEach(card => {
+                    if (card.card_ID = cardID) {    
+                        const bankID = card.bank_ID
+                        if (person.pin == pin && bankID == this.bank_ID) { 
+                            for (let i = 0; i < BANKS.length; i++) {
+                                const bank = BANKS[i];
+                                if (bank.bankName == card.bankName) {   
+                                    bank.bankAccounts.forEach(account => {
+                                        if (account.bankAccount_ID == card.bankAccount_ID) {
+                                            console.log(`${person.firstName} ${person.lastName} vas racun iznosi ${account.balance}`);
+                                        }
+                                    });
+                                } 
+                            }
+                        }
+                        else console.log(`${person.firstName} ${person.lastName} your information is not valid.`)
+                    }
+                });
+            }
+            else console.log("ATM is not working.")
+
+    }
+    OpenToBuissnesAtm() {
         this.isWorking = true;
     }
 }
@@ -195,7 +265,7 @@ class Account extends Person {
         this.bankAccount_ID = Account.accountid++,
             this.balance = 0;
         this.hasAccInBank = true
-        this.accountCreated = getDateAndTime()
+        this.accountCreated = getDateAndTime() // time and date when acc is created
     }
     setPin(pin) {       // for purpose of testing code will be added manualy, but it is supposed to be random four numbers with
         this.#pin = pin  // option for changing
@@ -230,7 +300,7 @@ class Bank {
     bankLocation;
     bankBudget;         // starting budget for banks
     bankCards = [];          // array with all cards in bank
-    employees = []
+    employees = []              // array with all employees in bank
     constructor(bankName, bankLocation, bankBudget) {
         this.bank_ID = Bank.bankID++,
             this.bankName = bankName,
@@ -243,6 +313,17 @@ class Bank {
             this.bankCards = []
         this.employees = []
 
+    }
+    addBankToDB(bank) {
+        BANKS.push(bank)
+    }
+    findAccount(accountID,jmbg, use = 1) { // type "use" if you want use account further
+        this.bankAccounts.forEach(account => {
+            if(accountID == account.bankAccount_ID && account.jmbg == jmbg) {
+              if (use == "use")  return account
+                 else  return console.log(account) 
+            }
+        });
     }
 
     hireEmployee(person) {
@@ -265,10 +346,9 @@ class Bank {
         person.employeeBankName = undefined
 
     }
-    getCreateAccount(person, cardType, employeeid) {
-        // console.log(this.employees);
+    getCreateAccount(person, cardType, employeeid) {    // method for retriving method for creating account
         this.employees.forEach(employee => {
-            if (employee.employee_ID == employeeid) {
+            if (employee.employee_ID == employeeid) {   // only employee can create new account
                 console.log("employee")
                 this.#CreateAccount(person, cardType)
             }
@@ -310,14 +390,10 @@ class Bank {
                 person.pin = undefined
                 person.cards.forEach(card => {
                     if (card.bank_ID == this.bank_ID) {
-
                         person.cards.splice(person.cards.indexOf(card), 1)
                     }
-
                 });
             }
-
-
         });
     }
     issueCard(bankAccount_ID, person, cardType) {
@@ -361,16 +437,59 @@ class Bank {
                 atm.balance = 0
                 this.isWorking = false
             }
+        });
+    }
+    deposit(account_ID1, amount) {
+        this.accounts.forEach(account => {
+            if (account.account_ID == account_ID1) {
+                account.balance += amount;
+                this.bankBudget += amount
+                // this.transactions.push(createTransaction( account.firstName, account.lastName, transactions.length, "deposit", account.account_ID, account.JMBG, deposit));
+            }
 
         });
 
-    }
-    depositMoney(user, accountID) { }
-    witdrawMoney(user, accountID) { }
-    checkBalance(user, accountID) { }
-    transferMoney(user, fromAccountID1, toAccountID2, amount) { }
 
+    }
+    withdraw(account_ID1, amount) {
+        this.accounts.forEach(account => {
+            if (account.account_ID == account_ID1) {
+                if (account.balance >= amount) {
+                    account.balance -= amount;
+                    // this.transactions.push(createTransaction(account.firstName, account.lastName, transactions.length, "withdraw", account.account_ID, account.JMBG, withdraw));
+                }
+                else console.log("Na  akauntu broj " + account.account_ID + " nemate dovoljno sredstava na racunu");
+            }
+
+        });
+
+
+    }
+    checkBalance(account_ID1) {
+        this.accounts.forEach(account => {
+            if (account.account_ID == account_ID1) {
+                console.log(`Vas racun iznosi ${account.balance}`);
+                // this.transactions.push(createTransaction(account.firstName, account.lastName, transactions.length, "check Balance", account.account_ID, account.JMBG, account.balance));
+            }
+        });
+    }
+    transferMoney(account_ID1, account_ID2, amount) { // account1 is account from which are send money, account2 is acc to which are
+        this.accounts.forEach(account1 => {             // sent money
+            this.accounts.forEach(account2 => {
+
+                if (account1.account_ID == account_ID1 && account2.account_ID == account_ID2) {
+
+                    this.account1.balance -= amount;
+                    this.account2.balance += amount;
+                    // this.transactions.push(createTransactionForTransferingMoney( account.bank_ID,account.firstName, account.lastName, account1.firstName, account1.lastName, transactions.length, "transfer money", account.account_ID, account1.account_ID, account.JMBG, account1.JMBG, amount)) 
+            }                
+            });
+
+        });
+    }
 }
+
+
 
 
 class Card {
@@ -380,8 +499,8 @@ class Card {
     firstName;
     lastName;
     bankName;
-    bankAccount_ID;
-    cardType;
+    bankAccount_ID; // account in bank
+    cardType;   // type of card, maestro, visa etc
     validFrom; // date when card is created
     validTo;     // date until card is valid
     constructor(bankName, firstName, lastName, bankAccount, cardType) {
@@ -400,6 +519,7 @@ const bank1 = new Bank("banka", "tuzla", 10000)
 const bank2 = new Bank("banka1", "tuzla", 111)
 BANKS.push(bank1)
 const adis = new Person("Adis", "Aljic", "M", "Tuzla")
+adis.addPersonToDB(adis)
 const radnik = new Person("radnik", "prezime", "F", "Tuzla")
 const radnik1 = new Person("radnik", "prezime", "F", "Tuzla")
 bank1.hireEmployee(radnik)
@@ -408,20 +528,23 @@ bank1.getCreateAccount(adis, "Maestro", 1)
 const atm1 = new Atm("Tuzla")
 ATMS.push(atm1)
 
-PEOPLE.push(adis,radnik,radnik1)
+// PEOPLE.push(adis,radnik,radnik1)
 atm1.OpenToBuissnesAtm()
 bank1.addAtm(atm1)
-bank1.addMoneyToAtm(1,1000)
+bank1.addMoneyToAtm(1, 1000)
 adis.insertCardInAtm()
-// console.log(adis.pin)
+// console.log(adis)
 // bank1.issueCard(1, adis, "visa")
-atm1.depositMoney(adis,1, 1111, 100)
+atm1.depositMoney(adis, 1, 1111, 100)
+atm1.witdrawMoney(adis, 1, 1111, 1000)
+atm1.checkBalance(adis, 1, 1111)
 // console.log(bank1.bankAccounts)
 // 
 // const emp = new Employee(radnik)
 // console.log(adis)
 // bank1.hireEmployee(radnik1)
-console.log(bank1.bankAccounts)
-console.log(adis)
-console.log(atm1)
-// console.log(ATMS)
+// console.log(bank1.bankAccounts)
+// console.log(adis)
+// console.log(atm1)
+// console.log(bank1.bankAccounts)
+bank1.findAccount(1,1234)
