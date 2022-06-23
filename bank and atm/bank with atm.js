@@ -1,20 +1,15 @@
-// transakcije za sve u banci i u atmu
-// skontat da se automatski pusha u glavni array bp
-// zavrsiti transfermoney u banci
-//testirati close acc close atm
+
 
 const { timeStamp } = require("console")
 const { type } = require("os")
 
 // array with all banks, all atms and all people
-const DB = []
 const BANKS = []
 const ATMS = []
 const PEOPLE = []
+const DB = [BANKS,ATMS,PEOPLE]
 
-const addAllToDB = () =>{       // function for add all into database
-    DB.push(BANKS,ATMS,PEOPLE)
-}
+
 
 const generateBirthDate = () => {
     //check for leapYear
@@ -880,4 +875,7 @@ atm1.checkBalance(adis,1,5555)
 // console.log(novaBanka.atmTransactions)
 // console.log(novaBanka.bankToAtmTransactions)
 // console.log(novaBanka.bankTransactions)
-console.log(NLB.employeesTransactions)
+// console.log(NLB.employeesTransactions)
+
+
+console.table(DB)
