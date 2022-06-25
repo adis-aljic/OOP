@@ -358,17 +358,7 @@ class Atm {
                                     }
                                     });
                             } 
-                            else {            // if not then 10% is added for transaction cost
-                                bank.bankAccounts.forEach(account => {
-                                    if (account.bankAccount_ID == card.bankAccount_ID) {
-                                        account.balance += (amount * 1.1)
-                                        bank.bankBudget += (amount * 1.1)
-                                        bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Deposit",account.bankAccount_ID,account.jmbg,amount));
-
-                                    }
-                                });
-
-                            }
+                            
                         }
                     }
                     else console.log(`${person.firstName} ${person.lastName} your information is not valid.`)
@@ -383,33 +373,41 @@ class Atm {
                 person.cards.forEach(card => {
                     if (card.card_ID = cardID) {    
                         const bankID = card.bank_ID
-                        if (person.pin == pin && bankID == this.bank_ID) { 
+                        if (person.pin == pin) { 
+                            console.log(`Your pin code is accepted, welcome ${person.firstName} ${person.lastName}`)
+                            
                             for (let i = 0; i < BANKS.length; i++) {
                                 const bank = BANKS[i];
-                                if (bank.bankName == card.bankName) {   
-                                    bank.bankAccounts.forEach(account => {
-                                        if (account.bankAccount_ID == card.bankAccount_ID && account.balance >= amount) {
-                                            account.balance -= amount
-                                            bank.bankBudget -= amount
+                                if( bankID == this.bank_ID) {
+                                    if (bank.bankName == card.bankName) {   
+                                        bank.bankAccounts.forEach(account => {
+                                            if (account.bankAccount_ID == card.bankAccount_ID && account.balance >= amount) {
+                                                account.balance -= amount
+                                                bank.bankBudget -= amount
+                                                bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Withdraw",account.bankAccount_ID,account.jmbg,amount));
+                                                
+                                            }
+                                            
+                                        });
+                                    }
+
+                                    else {            // if not then 10% is added for transaction cost
+                                        for (let i = 0; i < BANKS.length; i++) {
+                                            const bank = BANKS[i];
+                                        bank.bankAccounts.forEach(account => {
+                                            if (account.bankAccount_ID == card.bankAccount_ID) {
+                                            account.balance -= amount * 1.1
+                                            bank.bankBudget -= amount * 1.1
                                             bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Withdraw",account.bankAccount_ID,account.jmbg,amount));
-
+                                            
                                         }
-                                        else console.log(`Nemate dovoljno sredstava na racunu`)
-                                        bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Insufficient money on account. Transaction declined.",account.bankAccount_ID,account.jmbg,amount));
-
+                                        else {console.log(`Your transaction is denided, you have insuficient money for this transaction.`)
+                                        bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Insufficient money on account. Transaction declined.",account.bankAccount_ID,account.jmbg,amount));}
                                     });
-                                } else {            // if not then 10% is added for transaction cost
-                                    bank.bankAccounts.forEach(account => {
-                                        if (account.bankAccount_ID == card.bankAccount_ID) {
-                                            account.balance += amount * 1.1
-                                            bank.bankBudget += amount * 1.1
-                                            bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Withdraw",account.bankAccount_ID,account.jmbg,amount));
-
-                                        }
-                                    });
-    
+                                }}
                                 }
                             }
+    
                         }
                         else console.log(`${person.firstName} ${person.lastName} your information is not valid.`)
                     }
@@ -872,17 +870,17 @@ novaBanka.withdraw(1,50)
 novaBanka.checkBalance(1)
 
 // making transactions in atm
-
+adis.insertCardInAtm()
 atm1.depositMoney(adis,1,5555,20)
 atm1.withdrawMoney(adis,1,5555,10)
 atm1.checkBalance(adis,1,5555)
 
 // making transaction in atm from different bank and checking account in my bank
-// atm3.depositMoney(adis,1,5555,100)
+atm4.withdrawMoney(adis,1,5555,10)
 // atm1.checkBalance(adis,1,5555)
 // console.log(adis.cards)
 
-// novaBanka.findAccount(1,1234)
+novaBanka.findAccount(1,1234)
 
 // checking if withdraw works
 
@@ -897,4 +895,4 @@ atm1.checkBalance(adis,1,5555)
 // console.log(NLB.employeesTransactions)
 
 
-console.table(DB)
+// console.table(DB)
