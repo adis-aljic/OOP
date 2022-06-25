@@ -582,10 +582,9 @@ class Bank {
         }
         else console.log(`You can't hire person, you are not manager`)
     }
-    fireEmploye(person) {
+    fireEmploye(person,manager) {
         this.employees.forEach(employee => {
-            if (person.employee_ID = employee.employee_ID && employee.role == "Manager") {
-
+            if (employee.employee_ID = manager && person.employee_ID == employee.employee_ID) {
                 person.employee_ID = undefined;
                 person.hasAccInBank = false
                 person.isEmployed = false
@@ -875,8 +874,8 @@ novaBanka.hireManager(john)
 NLB.hireManager(jane)
 const saban = new Person("Saban", "Sabanic","M","Ozdrinje")
 novaBanka.hireEmployee(saban,john)
-console.log(saban)
-console.log(john)
+// console.log(saban)
+// console.log(john)
 // creating four atms and adding two atms to each bank
 
 const atm1 = new Atm("Slatina")
@@ -900,7 +899,6 @@ atm4.addAtmToDB(atm4)
 // creating accounts for adis and wick in two banks, issuing and revoking card
 
 novaBanka.getCreateAccount(adis,"Visa",1)
-console.log(adis.hasAccInBank)
 NLB.getCreateAccount(wick,"Maestro",2)
 // console.log(novaBanka.bankAccounts)
 // console.log(NLB.bankAccounts)
@@ -923,7 +921,8 @@ NLB.getCloseAccount(2,wick,2)
 // console.log(NLB.bankAccounts)       
 // console.log(wick)       
 // console.log(NLB.employees)
-NLB.fireEmploye(jane)
+console.log(saban)
+novaBanka.fireEmploye(saban,1)
 // console.log(NLB.employees)
 
 // adding money to atm
@@ -933,22 +932,22 @@ novaBanka.getAddMoneyAtm(1,1000,1)
 
 // making transactions in bank
 
-novaBanka.deposit(1,100)
-novaBanka.withdraw(1,50)
-novaBanka.checkBalance(1)
+// novaBanka.deposit(1,100)
+// novaBanka.withdraw(1,50)
+// novaBanka.checkBalance(1)
 
 // making transactions in atm
-adis.insertCardInAtm()
-atm1.depositMoney(adis,1,5555,20)
-atm1.withdrawMoney(adis,1,5555,10)
-atm1.checkBalance(adis,1,5555)
+// adis.insertCardInAtm()
+// atm1.depositMoney(adis,1,5555,20)
+// atm1.withdrawMoney(adis,1,5555,10)
+// atm1.checkBalance(adis,1,5555)
 
 // making transaction in atm from different bank and checking account in my bank
 // atm4.withdrawMoney(adis,1,5555,10)
 // atm1.checkBalance(adis,1,5555)
 // console.log(adis.cards)
 
-novaBanka.findAccount(1,1234)
+// novaBanka.findAccount(1,1234)
 
 // checking if withdraw works
 
@@ -957,10 +956,12 @@ novaBanka.findAccount(1,1234)
 
 // testing transactions
 
-console.log(novaBanka.atmTransactions)
+// console.log(novaBanka.atmTransactions)
 // console.log(novaBanka.bankToAtmTransactions)
 // console.log(novaBanka.bankTransactions)
 // console.log(NLB.employeesTransactions)
 
 
 // console.table(DB)
+
+console.log(novaBanka)
