@@ -1,6 +1,8 @@
 
 
 const { timeStamp } = require("console")
+const { createCipheriv } = require("crypto")
+const { get } = require("http")
 const { type } = require("os")
 
 // array with all banks, all atms and all people
@@ -109,193 +111,8 @@ const generateJMBG = (date, gender, birthPlace) => {
 
     return JMBG;
 }
-// creaing transaction
-class Transaction_ID {
-    static ID_transcation = 1  ;
-    transaction_ID;
-    firstName;
-    lastName;
-    type;
-    bankAccount_ID;
-    JMBG;
-    amount;
-    constructor (firstName, lastName,  type, bankAccount_ID, JMBG, amount)  {
-        this.transaction_ID = "TransInBank" + Transaction_ID.ID_transcation++ 
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.bankAccount_ID = bankAccount_ID;
-        this.type = type;
-        this.amount = amount
-        this.JMBG = JMBG, 
-        this.time= getDateAndTime().substring(11);
-        this.date= getDateAndTime().substring(0, 10);
-    }
-}
-class ATMTransaction_ID {
-    static ID_transcation = 1  ;
-    transaction_ID;
-    firstName;
-    lastName;
-    atmID;
-    type;
-    bankAccount_ID;
-    JMBG;
-    amount;
-    constructor (firstName, lastName, atmID, type, bankAccount_ID, JMBG, amount)  {
-        this.transaction_ID = "TransATM" + Transaction_ID.ID_transcation++ 
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.bankAccount_ID = bankAccount_ID;
-        this.atmID = atmID
-        this.type = type;
-        this.amount = amount
-        this.JMBG = JMBG, 
-        this.time= getDateAndTime().substring(11);
-        this.date= getDateAndTime().substring(0, 10);
-    }
-}
-class EmployeeTransactions {
-    static ID_employeeTranscation = 1;
-    employeeTransaction_ID;
-    firstName;
-    lastName;
-    type;
-    birthDate;
-    JMBG;
-    gender;
-    constructor (firstName, lastName, type, birthDate, JMBG, gender)  {
-        this.employeeTransaction_ID = "TransEmployee" + EmployeeTransactions.ID_employeeTranscation++ 
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.type = type;
-        this.birthDate = birthDate;
-        this.JMBG = JMBG;
-        this.gender = gender;
-        this.time= getDateAndTime().substring(11);
-        this.date= getDateAndTime().substring(0, 10);
-    }
-}
-class ATMTransaction {          // class for adding money from bank to atms
-    static ID_atmTranscation = 1  ;
-    atmTransactionsID;
-    bankName;
-    atmID;
-    atmLocation;
-    amount;
-    type;
-    constructor (bankName, atmID, atmLocation, amount, type)  {
-        this.atmTransactionsID = "TransAddMoneyToAtm" + ATMTransaction.ID_atmTranscation++ 
-        this.bankName = bankName;
-        this.atmID = atmID;
-        this.atmLocation = atmLocation;
-        this.amount = amount;
-        this.type = type;
-        this.time= getDateAndTime().substring(11);
-        this.date= getDateAndTime().substring(0, 10);
-    }
-}
-class AccountTransactions {
-    static ID_accountTransaction = 1;
-    accountTransactionsID;
-    firstName;
-    lastName;
-    bankAccount_ID;
-    pinCode;
-    type;
-    
-    constructor (firstName, lastName,bankAccount_ID, pinCode,type) {
-        this.accountTransactionsID = "TransCreateAcc" + AccountTransactions.ID_accountTransaction++;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.bankAccount_ID = bankAccount_ID;
-        this.pinCode = pinCode;
-        this.type = type;
-        this.time= getDateAndTime().substring(11);
-        this.date= getDateAndTime().substring(0, 10);
-        
-    }
+// creating person
 
-}
-class CardTransactions {
-    static ID_cardTransaction = 1;
-    cardTransactionsID;
-    firstName;
-    lastName;
-    bankAccount_ID;
-    cardID
-    cardType;
-    pinCode;
-    type;
-    
-    constructor (firstName, lastName, bankAccount_ID, cardID , cardType,pinCode,type) {
-        this.cardTransactionsID = "TransCreateCard" + CardTransactions.ID_cardTransaction++;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.bankAccount_ID = bankAccount_ID;
-        this.cardID = cardID;
-        this.cardType = cardType;
-        this.pinCode= pinCode;
-        this.type = type;
-        this.time= getDateAndTime().substring(11);
-        this.date= getDateAndTime().substring(0, 10);
-        
-    }
-}
-
-class ChangePinTransaction {
-    static ID_changePin = 1;
-    changePinTransactionID;
-    firstName;
-    lastName;
-    bankAccount_ID;
-    type;
-    oldPinCode;
-    newPinCode;
-    
-    constructor (firstName, lastName, bankAccount_ID, type , oldPinCode,newPinCode) {
-        this.changePinTransactionID = "TransChangePin" + ChangePinTransaction.ID_changePin++;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.bankAccount_ID = bankAccount_ID;
-        this.type = type;
-        this.oldPinCode = oldPinCode;
-        this.newPinCode = newPinCode
-        this.time= getDateAndTime().substring(11);
-        this.date= getDateAndTime().substring(0, 10);
-        
-    }
-}
-class TransactionBetweenAccounts {
-    static ID_TransactionBetweenAcoounts = 1;
-    transaction_ID;
-    firstNameSender;
-    lastNameSender;
-    firstNameReciever;
-    lastNameReciever;
-    type;
-    SenderAccount_ID;
-    RecieverAccount_ID;
-    JMBGSender;
-    JMBGReciever;
-    amount;
-     constructor (firstNameSender, lastNameSender, firstNameReciever, lastNameReciever, type, SenderAccount_ID, RecieverAccount_ID, JMBGSender, JMBGReciever, amount) {
-           this.transaction_ID = `TransBeetweenAcc` + TransactionBetweenAccounts.ID_TransactionBetweenAcoounts++
-           this.firstNameSender = firstNameSender;
-           this.lastNameSender = lastNameSender;
-           this.firstNameReciever = firstNameReciever;
-           this.lastNameReciever = lastNameReciever;
-           this.type = type;
-           this.SenderAccount_ID = SenderAccount_ID;
-           this.RecieverAccount_ID = RecieverAccount_ID
-           this.JMBGSender = JMBGSender;
-           this.JMBGReciever = JMBGReciever;
-           this.amount = amount;
-            this.time = getDateAndTime().substring(11)
-            this.date = getDateAndTime().substring(0,10)
-        
-        }
-    
-}
 class Person {
     firstName;
     lastName;
@@ -325,6 +142,202 @@ class Person {
 }
 
 
+
+// creating transaction
+class Transaction_ID  extends Person{
+    static ID_transcation = 1  ;
+
+    transaction_ID;
+    type;
+    bankAccount_ID;
+    amount;
+    constructor (firstName, lastName,  type, bankAccount_ID, jmbg, gender,amount)  {
+        super(firstName,lastName,jmbg,gender)
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.jmbg = jmbg
+        this.gender = gender
+        this.transaction_ID = "TransInBank_" + Transaction_ID.ID_transcation++ 
+        this.bankAccount_ID = bankAccount_ID;
+        this.type = type;
+        this.amount = amount
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+    }
+    
+}
+const deleteUndefinedValuesInObject =(obj)=> {
+    Object.keys(obj).forEach(key => {
+        if (obj[key] === undefined) {
+            delete obj[key];
+           }
+        else   if (obj[key].length === 0) {
+            delete obj[key];
+           }
+       });
+   }  
+class ATMTransaction_ID extends Person {
+    static ID_transcation = 1  ;
+    transaction_ID;
+    atmID;
+    type;
+    bankAccount_ID;
+    amount;
+    constructor (firstName, lastName, atmID, type, bankAccount_ID, jmbg,gender, amount)  {
+        super(firstName,lastName,jmbg)
+        this.transaction_ID = "TransATM_" + Transaction_ID.ID_transcation++ 
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.atmID = atmID
+        this.jmbg = jmbg
+        this.gender = gender
+        this.bankAccount_ID = bankAccount_ID;
+        this.type = type;
+        this.hasAccInBank = true
+        this.amount = amount
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+    }
+}
+class EmployeeTransactions extends Person{
+    static ID_employeeTranscation = 1;
+    employeeTransaction_ID;
+    type;
+   
+    constructor (firstName, lastName, type, birthDate, jmbg, gender)  {
+        super(firstName,lastName,jmbg,birthDate,gender)
+        this.employeeTransaction_ID = "TransEmployee_" + EmployeeTransactions.ID_employeeTranscation++ 
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.jmbg = jmbg
+        this.type = type;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+    }
+}
+class ATMTransaction {          // class for adding money from bank to atms
+    static ID_atmTranscation = 1  ;
+    atmTransactionsID;
+    bankName;
+    atmID;
+    atmLocation;
+    amount;
+    type;
+    constructor (bankName, atmID, atmLocation, amount, type)  {
+        this.atmTransactionsID = "TransAddMoneyToAtm_" + ATMTransaction.ID_atmTranscation++ 
+        this.bankName = bankName;
+        this.atmID = atmID;
+        this.atmLocation = atmLocation;
+        this.amount = amount;
+        this.type = type;
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+    }
+}
+class AccountTransactions extends Person{
+    static ID_accountTransaction = 1;
+    accountTransactionsID;
+    bankAccount_ID;
+    pinCode;
+    type;
+    
+    constructor (firstName, lastName, jmbg, bankAccount_ID, pinCode,type) {
+        super(firstName,lastName,jmbg)
+        this.accountTransactionsID = "TransAcc_" + AccountTransactions.ID_accountTransaction++;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.jmbg = jmbg
+        this.bankAccount_ID = bankAccount_ID;
+        this.pinCode = pinCode;
+        this.type = type;
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+        
+    }
+
+}
+class CardTransactions extends Person {
+    static ID_cardTransaction = 1;
+    cardTransactionsID;
+    bankAccount_ID;
+    cardID
+    cardType;
+    pinCode;
+    type;
+    
+    constructor (firstName, lastName, bankAccount_ID, cardID ,jmbg, cardType,pinCode,type) {
+        super(firstName,lastName,jmbg)
+        this.cardTransactionsID = "TransCreateCard_" + CardTransactions.ID_cardTransaction++;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bankAccount_ID = bankAccount_ID;
+        this.cardID = cardID;
+        this.cardType = cardType;
+        this.pinCode= pinCode;
+        this.type = type;
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+        
+    }
+}
+
+class ChangePinTransaction extends Person {
+    static ID_changePin = 1;
+    changePinTransactionID;
+
+    bankAccount_ID;
+    type;
+    oldPinCode;
+    newPinCode;
+    
+    constructor (firstName, lastName, bankAccount_ID, type , oldPinCode,newPinCode) {
+        super(firstName,lastName)
+        this.changePinTransactionID = "TransChangePin" + ChangePinTransaction.ID_changePin++;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bankAccount_ID = bankAccount_ID;
+        this.type = type;
+        this.oldPinCode = oldPinCode;
+        this.newPinCode = newPinCode
+        this.time= getDateAndTime().substring(11);
+        this.date= getDateAndTime().substring(0, 10);
+        
+    }
+}
+class TransactionBetweenAccounts {
+    static ID_TransactionBetweenAcoounts = 1;
+    transaction_ID;
+    firstNameSender;
+    lastNameSender;
+    firstNameReciever;
+    lastNameReciever;
+    type;
+    SenderAccount_ID;
+    RecieverAccount_ID;
+    JMBGSender;
+    JMBGReciever;
+    amount;
+     constructor (firstNameSender, lastNameSender, firstNameReciever, lastNameReciever, type, SenderAccount_ID, RecieverAccount_ID, JMBGSender, JMBGReciever, amount) {
+           this.transaction_ID = `TransBeetweenAcc_` + TransactionBetweenAccounts.ID_TransactionBetweenAcoounts++
+           this.firstNameSender = firstNameSender;
+           this.lastNameSender = lastNameSender;
+           this.firstNameReciever = firstNameReciever;
+           this.lastNameReciever = lastNameReciever;
+           this.type = type;
+           this.SenderAccount_ID = SenderAccount_ID;
+           this.RecieverAccount_ID = RecieverAccount_ID
+           this.JMBGSender = JMBGSender;
+           this.JMBGReciever = JMBGReciever;
+           this.amount = amount;
+            this.time = getDateAndTime().substring(11)
+            this.date = getDateAndTime().substring(0,10)
+        
+        }
+    
+}
+
 class Atm {
     static atmID = 1;
     atm_ID;
@@ -352,9 +365,12 @@ class Atm {
                             if (bank.bankName == card.bankName) {   // checking if bank is correct
                                 bank.bankAccounts.forEach(account => {
                                     if (account.bankAccount_ID == card.bankAccount_ID) {
+                                        account.hasAccInBank = true
                                         account.balance += amount
                                         bank.bankBudget += amount
-                                        bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Deposit",account.bankAccount_ID,account.jmbg,amount));
+                                        const transaction =new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Deposit",account.bankAccount_ID,account.jmbg,account.gender, amount)
+                                        deleteUndefinedValuesInObject(transaction)
+                                            bank.atmTransactions.push(transaction);
                                     }
                                     });
                             } 
@@ -384,7 +400,11 @@ class Atm {
                                             if (account.bankAccount_ID == card.bankAccount_ID && account.balance >= amount) {
                                                 account.balance -= amount
                                                 bank.bankBudget -= amount
-                                                bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Withdraw",account.bankAccount_ID,account.jmbg,amount));
+                                                const transaction = new ATMTransaction_ID(account.firstName,account.lastName,account.jmbg,this.atm_ID,"Withdraw",account.bankAccount_ID,account.gender, amount)
+                                                account.hasAccInBank = true
+
+                                                deleteUndefinedValuesInObject(transaction)
+                                                bank.atmTransactions.push(transaction);
                                                 
                                             }
                                             
@@ -396,13 +416,20 @@ class Atm {
                                             const bank = BANKS[i];
                                         bank.bankAccounts.forEach(account => {
                                             if (account.bankAccount_ID == card.bankAccount_ID) {
-                                            account.balance -= amount * 1.1
-                                            bank.bankBudget -= amount * 1.1
-                                            bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Withdraw",account.bankAccount_ID,account.jmbg,amount));
+                                                account.balance -= amount * 1.1
+                                                bank.bankBudget -= amount * 1.1
+                                                const transaction = new ATMTransaction_ID(account.firstName,account.lastName,account.jmbg,this.atm_ID,"Withdraw",account.bankAccount_ID, account.gender,amount)
+                                                deleteUndefinedValuesInObject(transaction)
+                                                transaction.hasAccInBank = false
+                                                transaction.jmbg = person.jmbg
+                                                transaction.atmID = this.atm_ID
+                                            bank.atmTransactions.push(transaction);
                                             
                                         }
                                         else {console.log(`Your transaction is denided, you have insuficient money for this transaction.`)
-                                        bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"Insufficient money on account. Transaction declined.",account.bankAccount_ID,account.jmbg,amount));}
+                                       const transaction =new ATMTransaction_ID(account.firstName,account.lastName,account.jmbg,this.atm_ID,"Insufficient money on account. Transaction declined.",account.bankAccount_ID,account.gender, amount)
+                                       deleteUndefinedValuesInObject(transaction)
+                                        bank.atmTransactions.push(transaction);}
                                     });
                                 }}
                                 }
@@ -428,7 +455,10 @@ class Atm {
                                     bank.bankAccounts.forEach(account => {
                                         if (account.bankAccount_ID == card.bankAccount_ID) {
                                             console.log(`${person.firstName} ${person.lastName} vas racun iznosi ${account.balance}`);
-                                            bank.atmTransactions.push(new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"CheckBalance",account.bankAccount_ID,account.jmbg,account.balance));
+                                            const transaction = new ATMTransaction_ID(account.firstName,account.lastName,this.atm_ID,"CheckBalance",account.bankAccount_ID,account.jmbg,account.gender,account.balance)
+                                           account.hasAccInBank = true;
+                                            deleteUndefinedValuesInObject(transaction)
+                                            bank.atmTransactions.push(transaction);
 
                                         }
                                         
@@ -456,11 +486,13 @@ class Account extends Person {
     bankAccount_ID;     // account number
     balance;               // balance on account
     accountCreated; // time and date when is acc created
-    constructor(firstName, lastName, gender, birthPlace) {
-        super(firstName, lastName, gender, birthPlace);
+    constructor(firstName, lastName, jmbg,gender, birthPlace) {
+        super(firstName, lastName, jmbg, gender, birthPlace);
         this.bankAccount_ID = Account.accountid++,
+        this.jmbg = jmbg
+        this.gender = gender
+        this.birthPlace = birthPlace
             this.balance = 0;
-        this.hasAccInBank = true
         this.accountCreated = getDateAndTime() // time and date when acc is created
     }
     setPin(pin) {       // for purpose of testing code will be added manualy, but it is supposed to be random four numbers with
@@ -531,7 +563,9 @@ class Bank {
         person.employeeBankID = this.bank_ID
         person.employeeBankName = this.bankName
         this.employees.push(person)
-        this.employeesTransactions.push(new EmployeeTransactions (person.firstName,person.lastName,"hired",person.birthDate,person.jmbg,person.gender))
+        const transaction = new EmployeeTransactions (person.firstName,person.lastName,"hired",person.birthDate,person.jmbg,person.gender)
+        deleteUndefinedValuesInObject(transaction)
+        this.employeesTransactions.push(transaction)
     }
     hireEmployee(person, manager) {
         if (manager.role == "Manager") {
@@ -542,7 +576,9 @@ class Bank {
             person.employeeBankID = this.bank_ID
             person.employeeBankName = this.bankName
             this.employees.push(person)
-            this.employeesTransactions.push(new EmployeeTransactions (person.firstName,person.lastName,"hired",person.birthDate,person.jmbg,person.gender))
+           const transaction= new EmployeeTransactions (person.firstName,person.lastName,"hired",person.birthDate,person.jmbg,person.gender)
+           deleteUndefinedValuesInObject(transaction) 
+           this.employeesTransactions.push(transaction)
         }
         else console.log(`You can't hire person, you are not manager`)
     }
@@ -556,7 +592,10 @@ class Bank {
                 person.employeeBankID = undefined
                 person.employeeBankName = undefined
                 this.employees.splice(this.employees.indexOf(employee), 1)
-                this.employeesTransactions.push(new EmployeeTransactions (person.firstName,person.lastName,"fired",person.birthDate,person.jmbg,person.gender))
+                const transaction = new EmployeeTransactions (person.firstName,person.lastName,"fired",person.birthDate,person.jmbg,person.gender)
+                deleteUndefinedValuesInObject(transaction)
+                deleteUndefinedValuesInObject(person)
+                this.employeesTransactions.push(transaction)
             }
         });
 
@@ -569,23 +608,26 @@ class Bank {
         });
     }
     #CreateAccount(person, cardType) {
-
-        let account = new Account(person.firstName, person.lastName, person.gender, person.birthPlace) // creating acc and adding
+        person.hasAccInBank = true
+        let account = new Account(person.firstName, person.lastName,person.jmbg, person.gender, person.birthPlace)
+        account.hasAccInBank =true // creating acc and adding
         let card = new Card(this.bankName, person.firstName, person.lastName, account.bankAccount_ID, cardType)
         // creating card, adding bank ID
         card.bank_ID = this.bank_ID
         
-        person.hasAccInBank = true;
         person.cards.push(card)      // adding card to person
         account.setPin(1111) // it should be first pin generated with 4 random number but for purpose of testing is 1111
         person.pin = account.getPin()
         account.cards.push(card)
-        this.accountTransactions.push(new CardTransactions(person.firstName,person.lastName,account.bankAccount_ID,card.card_ID,card.cardType,person.pin,"new Card"))
+        const transaction = new CardTransactions(person.firstName,person.lastName,account.bankAccount_ID,card.card_ID,card.cardType,person.pin,"new Card")
+        deleteUndefinedValuesInObject(transaction)
+        this.accountTransactions.push(transaction)
         account.bank_ID = this.bank_ID
         this.bankAccounts.push(account)
         this.bankCards.push(card)
-
-        this.accountTransactions.push(new AccountTransactions(person.firstName,person.lastName,account.bankAccount_ID,person.pin,"Created Account"))
+        const transaction1 = new AccountTransactions(person.firstName,person.lastName,person.jmbg,account.bankAccount_ID,person.pin,"Created Account")
+        deleteUndefinedValuesInObject(transaction1)
+        this.accountTransactions.push(transaction1)
         
     }
     changePinCode(person, bankAccount_ID, newPinCode) { // method for changing pin code
@@ -597,7 +639,9 @@ class Bank {
                     person.pin = account.getPin()
                     console.log(`Hello ${person.firstName} ${person.lastName}, you are succesfuly changed your pin code. 
                     Your new code is ${person.pin} `)
-                    this.accountTransactions.push(new ChangePinTransaction(person.firstName,person.lastName,account.bankAccount_ID,"Change pin",oldPinCode,person.pin))
+                    const transaction = new ChangePinTransaction(person.firstName,person.lastName,account.bankAccount_ID,"Change pin",oldPinCode,person.pin)
+                    deleteUndefinedValuesInObject(transaction)
+                    this.accountTransactions.push(transaction)
             }
             else console.log(`Pin code is invalid. Please enter pin code as combination of 4 numbers.`)
         });
@@ -613,7 +657,9 @@ class Bank {
     #closeAccount(account_ID, person) {
         this.bankAccounts.forEach(account => {
             if (account_ID == account.bankAccount_ID) {
-                this.accountTransactions.push(new AccountTransactions(person.firstName,person.lastName,account.bankAccount_ID,person.pin,"Closed Account"))
+                const transaction = new AccountTransactions(person.firstName,person.lastName,account.bankAccount_ID,person.pin,"Closed Account")
+                deleteUndefinedValuesInObject(transaction)
+                this.accountTransactions.push(transaction)
                 this.bankAccounts.splice(this.bankAccounts.indexOf(account), 1)
                 person.hasAccInBank = false
                 person.pin = undefined
@@ -624,6 +670,7 @@ class Bank {
                 });
             }
         });
+        deleteUndefinedValuesInObject(person)
     }
     getIssueCard(bankAccount_ID, person, cardType, employeeid) {    // method for retriving method for issuing  new cards
         this.employees.forEach(employee => {
@@ -639,7 +686,9 @@ class Bank {
         this.bankAccounts.forEach(account => {
             if (account.bankAccount_ID == bankAccount_ID) {
                 account.cards.push(card)
-                this.accountTransactions.push(new CardTransactions(person.firstName,person.lastName,account.bankAccount_ID,card.card_ID,card.cardType,person.pin,"new Card"))
+                const transaction = new CardTransactions(person.firstName,person.lastName,account.bankAccount_ID,card.card_ID,card.cardType,person.pin,"new Card")
+                deleteUndefinedValuesInObject(transaction)
+                this.accountTransactions.push(transaction)
             }
         });
         this.bankCards.push(card)
@@ -657,10 +706,13 @@ class Bank {
             if (card.card_ID == cardID) {
                 this.bankCards.splice(this.bankCards.indexOf(card, 1))
                 person.cards.splice(person.cards.indexOf(card,1))
-                this.accountTransactions.push(new CardTransactions(person.firstName,person.lastName,card.bankAccount_ID,card.card_ID,card.cardType,person.pin,"revoked card"))
+                const transaction = new CardTransactions(person.firstName,person.lastName,card.bankAccount_ID,card.card_ID,card.cardType,person.pin,"revoked card")
+                deleteUndefinedValuesInObject(transaction)
+                this.accountTransactions.push(transaction)
 
             }
             person.pin = undefined
+            deleteUndefinedValuesInObject(person)
         });
 
     }
@@ -673,7 +725,9 @@ class Bank {
     #addAtm(atmName) {
         atmName.bankName = this.bankName
         atmName.bank_ID = this.bank_ID
-        this.atmTransactions.push(new ATMTransaction(this.bankName, atmName.atm_ID,atmName.atmLocation,"","Add ATM"))
+        const transaction =new ATMTransaction(this.bankName, atmName.atm_ID,atmName.atmLocation,"","Add ATM")
+        deleteUndefinedValuesInObject(transaction)
+        this.atmTransactions.push(transaction)
 
     }
     getAddMoneyAtm(atmID,amount ,employeeid) {    // method for adding money to atm
@@ -687,7 +741,9 @@ class Bank {
             if (atm.atm_ID == atmID) {
                 atm.balance += amount
                 this.bankBudget -= amount
-                this.bankToAtmTransactions.push(new ATMTransaction(this.bankName, atm.atm_ID,atm.atmLocation,amount,"Add money to ATM"))
+                const transaction = new ATMTransaction(this.bankName, atm.atm_ID,atm.atmLocation,amount,"Add money to ATM")
+               deleteUndefinedValuesInObject(transaction)
+                this.bankToAtmTransactions.push(transaction)
             }
 
         });
@@ -705,7 +761,9 @@ class Bank {
                 this.bankBudget += atm.balance
                 atm.balance = 0
                 this.isWorking = false
-                this.atmTransactions.push(new TransactionToAtm(this.bankName, atm.atm_ID,atm.atmLocation,"","closed ATM"))
+                const transaction = new TransactionToAtm(this.bankName, atm.atm_ID,atm.atmLocation,"","closed ATM")
+                deleteUndefinedValuesInObject(transaction)
+                this.atmTransactions.push(transaction)
 
             }
         });
@@ -715,7 +773,9 @@ class Bank {
             if (account.bankAccount_ID == account_ID1) {
                 account.balance += amount;
                 this.bankBudget += amount
-                this.bankTransactions.push(new Transaction_ID(account.firstName,account.lastName,"Deposit",account.bankAccount_ID,account.jmbg,amount));
+                  const transaction=  new Transaction_ID(account.firstName,account.lastName,"Deposit",account.bankAccount_ID,account.jmbg, account.gender, amount)
+                deleteUndefinedValuesInObject(transaction)
+                  this.bankTransactions.push(transaction);
             }
 
         });
@@ -727,7 +787,9 @@ class Bank {
             if (account.bankAccount_ID == account_ID1) {
                 if (account.balance >= amount) {
                     account.balance -= amount;
-                    this.bankTransactions.push(new Transaction_ID(account.firstName,account.lastName,"Withdraw",account.bankAccount_ID,account.jmbg,amount));
+                    const transaction =new Transaction_ID(account.firstName,account.lastName,"Withdraw",account.bankAccount_ID,account.jmbg,account.gender, amount)
+                    deleteUndefinedValuesInObject(transaction)
+                    this.bankTransactions.push(transaction);
                 }
                 else console.log(`${account.firstName} ${account.lastName}  you don't have enough money on account ${account.bankAccount_ID}`);
             }
@@ -740,7 +802,10 @@ class Bank {
         this.bankAccounts.forEach(account => {
             if (account.bankAccount_ID == account_ID1) {
                 console.log(`${account.firstName} ${account.lastName} your balance is ${account.balance}`);
-                this.bankTransactions.push(new Transaction_ID(account.firstName,account.lastName,"CheckBalance",account.bankAccount_ID,account.jmbg,account.balance));
+                const transaction =  new Transaction_ID(account.firstName,account.lastName,"CheckBalance",account.bankAccount_ID,account.jmbg,account.gender, account.balance)
+                deleteUndefinedValuesInObject(transaction)
+               
+                this.bankTransactions.push(transaction);
             }
         });
     }
@@ -752,7 +817,9 @@ class Bank {
 
                     account1.balance -= amount;
                     account2.balance += amount;
-                    this.bankTransactions.push(new TransactionBetweenAccounts(account1.firstName,account1.lastName,account2.firstName,account2.lastName,"Transfering Money",account1.bankAccount_ID,account2.bankAccount_ID,account1.jmbg,account2.jmbg,amount)) 
+                    const transaction = new TransactionBetweenAccounts(account1.firstName,account1.lastName,account2.firstName,account2.lastName,"Transfering Money",account1.bankAccount_ID,account2.bankAccount_ID,account1.jmbg,account2.jmbg,amount)
+                    deleteUndefinedValuesInObject(transaction)
+                    this.bankTransactions.push(transaction) 
             }                
             });
         });
@@ -833,13 +900,14 @@ atm4.addAtmToDB(atm4)
 // creating accounts for adis and wick in two banks, issuing and revoking card
 
 novaBanka.getCreateAccount(adis,"Visa",1)
+console.log(adis.hasAccInBank)
 NLB.getCreateAccount(wick,"Maestro",2)
 // console.log(novaBanka.bankAccounts)
 // console.log(NLB.bankAccounts)
 novaBanka.getIssueCard(1,adis,"Maestro",1)
 // console.log(adis.cards)
 // console.log(novaBanka.bankCards)
-novaBanka.getRevokeCard(3,adis,1)
+// novaBanka.getRevokeCard(3,adis,1)
 // console.log(adis.cards)
 // console.log(novaBanka.bankCards)
 
@@ -876,7 +944,7 @@ atm1.withdrawMoney(adis,1,5555,10)
 atm1.checkBalance(adis,1,5555)
 
 // making transaction in atm from different bank and checking account in my bank
-atm4.withdrawMoney(adis,1,5555,10)
+// atm4.withdrawMoney(adis,1,5555,10)
 // atm1.checkBalance(adis,1,5555)
 // console.log(adis.cards)
 
@@ -889,7 +957,7 @@ novaBanka.findAccount(1,1234)
 
 // testing transactions
 
-// console.log(novaBanka.atmTransactions)
+console.log(novaBanka.atmTransactions)
 // console.log(novaBanka.bankToAtmTransactions)
 // console.log(novaBanka.bankTransactions)
 // console.log(NLB.employeesTransactions)
